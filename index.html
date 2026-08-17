@@ -3,81 +3,400 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
+<meta name="theme-color" content="#0b1f3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>双语学习卡片</title>
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--blue:#2563eb;--soft:#eff6ff;--green:#15803d;--red:#b91c1c}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif}
-.app{max-width:960px;margin:auto;padding:14px 14px 40px}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
-h1{font-size:25px;margin:0 0 5px}.sub{font-size:13px;color:var(--muted);line-height:1.5}.issue{font-weight:700;color:var(--blue);white-space:nowrap}
-.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:12px;box-shadow:0 5px 18px #00000008}
-.tabs{display:flex;gap:8px;overflow:auto}.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 13px;white-space:nowrap}.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.search{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;font-size:15px;margin-bottom:8px}
-button,select{font:inherit;border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;min-height:42px;color:var(--text)}
-button.primary{background:var(--blue);border-color:var(--blue);color:white}
-.progressline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin:8px 2px}.bar{height:7px;background:#e5e7eb;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--blue);width:0}
-.card{perspective:1200px;touch-action:pan-y}.inner{position:relative;min-height:390px;transform-style:preserve-3d;transition:.4s}.inner.flip{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 30px #0000000c;padding:23px;display:flex;flex-direction:column;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.back{transform:rotateY(180deg)}.pill{font-size:12px;background:var(--soft);color:var(--blue);padding:6px 10px;border-radius:99px;align-self:flex-start}.label{font-size:12px;color:var(--muted);margin-top:16px}.text{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-size:clamp(21px,4.5vw,34px);font-weight:650}.back .text{font-size:clamp(18px,4vw,27px);font-weight:500}.note{font-size:13px;line-height:1.6;color:#4b5563;background:#f8fafc;padding:10px 12px;border-radius:12px}.hint{text-align:center;color:var(--muted);font-size:12px}
-.actions{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;margin-top:10px}.actions button{min-height:48px}.subactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}
-.list{margin-top:12px}.result{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px;margin-bottom:8px}.result b{display:block;margin-bottom:5px}.result small{color:var(--muted)}
-.empty{text-align:center;color:var(--muted);padding:24px}
-@media(max-width:560px){.inner{min-height:420px}.top{align-items:center}.controls{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
+:root{
+  --navy:#0b1f3a;
+  --navy-2:#17375e;
+  --blue:#1f5fa8;
+  --blue-soft:#eef5fc;
+  --gold:#b68b2c;
+  --gold-soft:#fbf6e8;
+  --ink:#182230;
+  --muted:#657386;
+  --line:#dfe6ee;
+  --bg:#f4f6f9;
+  --white:#fff;
+  --green:#1f7a4d;
+  --shadow:0 14px 40px rgba(11,31,58,.08);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#f7f9fb 0,#f3f5f8 100%);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
+  "Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+}
+
+.app{max-width:1040px;margin:0 auto;padding:0 16px 44px}
+.topbar{
+  margin:0 -16px 22px;
+  background:linear-gradient(135deg,var(--navy) 0%,#12345a 100%);
+  color:#fff;
+  padding:22px max(16px,calc((100vw - 1040px)/2 + 16px)) 20px;
+  box-shadow:0 6px 22px rgba(11,31,58,.14);
+}
+.brand-row{
+  display:flex;justify-content:space-between;gap:18px;align-items:flex-start;
+}
+.eyebrow{
+  display:flex;align-items:center;gap:8px;
+  text-transform:uppercase;letter-spacing:.08em;
+  font-size:11px;color:#b8cadc;font-weight:700;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+h1{font-size:29px;line-height:1.18;margin:7px 0 5px;font-weight:720;letter-spacing:-.02em}
+.sub{font-size:13px;color:#d4deea;line-height:1.6}
+.issue{
+  color:#f7df9a;border:1px solid rgba(247,223,154,.45);
+  border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;white-space:nowrap;
+}
+
+.panel{
+  background:rgba(255,255,255,.96);
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:12px;
+  margin-bottom:12px;
+  box-shadow:0 5px 20px rgba(11,31,58,.04);
+}
+.tabs{display:flex;gap:8px;overflow:auto;padding:1px}
+.tab{
+  border:1px solid var(--line);background:#fff;color:var(--muted);
+  border-radius:10px;padding:9px 13px;white-space:nowrap;min-height:40px;
+  font-weight:600;
+}
+.tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
+
+.search{
+  width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;
+  font-size:15px;outline:none;background:#fbfcfe;
+}
+.search:focus{border-color:#8cafcf;box-shadow:0 0 0 3px rgba(31,95,168,.08)}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+button,select{
+  font:inherit;border:1px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:11px;padding:10px 12px;min-height:42px;cursor:pointer;
+}
+button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+button.gold{background:var(--gold-soft);border-color:#ead9a9;color:#7f6220}
+
+.progressline{
+  display:flex;justify-content:space-between;color:var(--muted);
+  font-size:12px;margin:10px 2px 7px;
+}
+.bar{height:6px;background:#e8edf3;border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),#5f92c5);transition:width .25s}
+
+.card{perspective:1400px;touch-action:pan-y;margin-top:14px}
+.inner{
+  position:relative;min-height:430px;
+  transform-style:preserve-3d;transition:transform .48s cubic-bezier(.2,.7,.2,1);
+}
+.inner.flip{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;
+  background:#fff;border:1px solid #dce4ed;border-radius:24px;
+  box-shadow:var(--shadow);padding:26px 28px;
+  display:flex;flex-direction:column;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.back{transform:rotateY(180deg)}
+
+.meta-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pill{
+  font-size:11px;font-weight:700;letter-spacing:.02em;
+  color:var(--blue);background:var(--blue-soft);
+  border:1px solid #d9e8f8;padding:6px 10px;border-radius:999px;
+}
+.mini{font-size:11px;color:#8793a2}
+.label{
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:#8995a3;margin-top:17px;font-weight:700;
+}
+.text{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;
+  line-height:1.72;font-size:clamp(24px,4.5vw,36px);
+  font-weight:680;letter-spacing:-.01em;padding:16px 10px;
+}
+.back .text{
+  display:block;align-self:stretch;
+  text-align:left;font-size:clamp(18px,3.5vw,24px);
+  line-height:1.95;font-weight:450;letter-spacing:0;padding:18px 4px 10px;
+}
+.back .text::first-line{font-weight:520}
+
+.divider{height:1px;background:#edf1f5;margin:4px 0 11px}
+.note{
+  font-size:13px;line-height:1.72;color:#4f5e6d;
+  background:#f8fafc;border:1px solid #e9eef3;
+  padding:12px 14px;border-radius:13px;
+}
+.note::before{
+  content:"学习提示";
+  display:block;font-size:10px;font-weight:800;letter-spacing:.08em;
+  color:var(--gold);margin-bottom:4px;text-transform:uppercase;
+}
+.hint{text-align:center;color:#8a95a3;font-size:12px;margin-top:10px}
+
+.actions{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:8px;margin-top:10px}
+.actions button{min-height:48px;font-weight:650}
+.subactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{
+  background:#fff;border:1px solid var(--line);border-radius:13px;
+  padding:11px;text-align:center;box-shadow:0 4px 14px rgba(11,31,58,.03)
+}
+.stat b{display:block;font-size:18px;color:var(--navy)}
+.stat span{font-size:11px;color:var(--muted)}
+
+.section-title{
+  display:flex;justify-content:space-between;align-items:center;
+  font-weight:700;font-size:14px;margin-bottom:10px
+}
+.result{
+  background:#fff;border:1px solid var(--line);border-radius:13px;
+  padding:12px;margin-bottom:8px;cursor:pointer;
+}
+.result:hover{border-color:#b8cee4;background:#fcfdff}
+.result b{display:block;margin-bottom:5px;line-height:1.5}
+.result small{display:block;color:var(--muted);line-height:1.55}
+.empty{text-align:center;color:var(--muted);padding:24px 10px;font-size:13px}
+
+.footer-note{
+  text-align:center;color:#97a1ad;font-size:11px;line-height:1.7;margin-top:18px
+}
+
+@media(max-width:620px){
+  .app{padding:0 12px 34px}
+  .topbar{margin:0 -12px 18px;padding:18px 12px 17px}
+  h1{font-size:25px}
+  .brand-row{gap:10px}
+  .issue{font-size:11px;padding:6px 9px}
+  .controls{grid-template-columns:1fr}
+  .inner{min-height:455px}
+  .face{padding:21px 18px;border-radius:21px}
+  .text{font-size:clamp(22px,6vw,31px);padding:10px 2px}
+  .back .text{font-size:clamp(17px,4.7vw,21px);line-height:1.9}
+}
 </style>
 </head>
 <body>
 <div class="app">
-<div class="top"><div><h1>双语学习卡片</h1><div class="sub">微信群长期学习版 · 点击翻面 · 数据保存在本机</div></div><div class="issue" id="issue">第 01 期</div></div>
 
-<div class="panel">
-<div class="tabs" id="tabs"></div>
-</div>
+<header class="topbar">
+  <div class="brand-row">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Bilingual Learning Series</div>
+      <h1>双语学习卡片</h1>
+      <div class="sub">政经英语 · 金融英语 · 官方表达</div>
+    </div>
+    <div class="issue" id="issue">第 01 期</div>
+  </div>
+</header>
 
-<div class="panel">
-<input class="search" id="search" placeholder="搜索中文、英文、标签……">
-<div class="controls">
-<select id="type"><option value="all">全部类型</option><option value="term">术语</option><option value="sentence">句子</option></select>
-<button id="shuffle">🔀 随机顺序</button>
-</div>
-</div>
+<section class="panel">
+  <div class="tabs" id="tabs"></div>
+</section>
+
+<section class="panel">
+  <input class="search" id="search" placeholder="搜索中文、英文或标签……">
+  <div class="controls">
+    <select id="type">
+      <option value="all">全部内容</option>
+      <option value="term">术语</option>
+      <option value="sentence">句子</option>
+    </select>
+    <button id="shuffle">🔀 随机练习</button>
+  </div>
+</section>
 
 <div class="progressline"><span id="counter">1 / 6</span><span id="progressText">已掌握 0</span></div>
 <div class="bar"><i id="bar"></i></div>
 
-<div class="card" id="card"><div class="inner" id="inner">
-<section class="face"><span class="pill" id="tag">术语</span><div class="label">正面</div><div class="text" id="front"></div><div class="hint">点击卡片或“显示答案”</div></section>
-<section class="face back"><span class="pill">参考答案</span><div class="label">背面</div><div class="text" id="back"></div><div class="note" id="note"></div></section>
-</div></div>
+<main>
+<div class="card" id="card">
+  <div class="inner" id="inner">
 
-<div class="actions"><button id="prev">← 上一张</button><button class="primary" id="flip">显示答案</button><button id="next">下一张 →</button></div>
-<div class="subactions"><button id="again">🤔 再练</button><button id="know">✅ 已掌握</button></div>
+    <section class="face">
+      <div class="meta-row">
+        <span class="pill" id="tag">术语</span>
+        <span class="mini">先思考，再翻卡</span>
+      </div>
+      <div class="label">Front · 正面</div>
+      <div class="text" id="front"></div>
+      <div class="hint">点击卡片或下方按钮查看答案</div>
+    </section>
 
-<div class="stats"><div class="stat"><b id="total">0</b><span>当前卡组</span></div><div class="stat"><b id="known">0</b><span>已掌握</span></div><div class="stat"><b id="fav">0</b><span>收藏</span></div></div>
+    <section class="face back">
+      <div class="meta-row">
+        <span class="pill">参考答案</span>
+        <span class="mini">Back · 背面</span>
+      </div>
+      <div class="label">Reference · 参考译文</div>
+      <div class="text" id="back"></div>
+      <div class="divider"></div>
+      <div class="note" id="note"></div>
+    </section>
 
-<div class="panel list" id="results"></div>
+  </div>
+</div>
+
+<div class="actions">
+  <button id="prev">← 上一张</button>
+  <button class="primary" id="flip">显示答案</button>
+  <button id="next">下一张 →</button>
+</div>
+
+<div class="subactions">
+  <button id="again">🤔 再练</button>
+  <button class="gold" id="know">✓ 已掌握</button>
+</div>
+
+<div class="stats">
+  <div class="stat"><b id="total">0</b><span>当前卡组</span></div>
+  <div class="stat"><b id="known">0</b><span>已掌握</span></div>
+  <div class="stat"><b id="fav">0</b><span>收藏</span></div>
+</div>
+
+<section class="panel list" id="results" style="margin-top:14px"></section>
+
+<div class="footer-note">
+  本地学习记录保存在当前设备浏览器中，不上传学习数据。<br>
+  网站内容由卡片数据文件统一维护。
+</div>
+</main>
 </div>
 
 <script>
 let all=[], pool=[], idx=0, flipped=false, issue="01";
 let state=JSON.parse(localStorage.getItem("bilingual-card-state")||'{"known":[],"fav":[],"wrong":[]}');
-const $=x=>document.getElementById(x);
-function save(){localStorage.setItem("bilingual-card-state",JSON.stringify(state))}
-function issues(){return [...new Set(all.map(x=>x.issue))]}
-function renderTabs(){ $("tabs").innerHTML=issues().map(x=>`<button class="tab ${x===issue?'active':''}" data-i="${x}">第 ${x} 期</button>`).join("");document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{issue=b.dataset.i;build()})}
-function build(preserve){let t=$("type").value,s=$("search").value.trim().toLowerCase();pool=all.filter(x=>x.issue===issue&&(t==="all"||x.type===t)&&(!s||(x.front+" "+x.back+" "+x.tag+" "+x.note).toLowerCase().includes(s)));if(preserve){let p=pool.findIndex(x=>x.id===preserve);idx=p<0?0:p}else idx=Math.min(idx,Math.max(0,pool.length-1));render()}
-function render(){if(!pool.length){$("front").textContent="没有找到卡片";$("back").textContent="";$("note").textContent="请更换搜索词或筛选条件";return}let c=pool[idx];flipped=false;$("inner").classList.remove("flip");$("flip").textContent="显示答案";$("front").textContent=c.front;$("back").textContent=c.back;$("tag").textContent=c.tag;$("note").textContent=c.note;$("counter").textContent=`${idx+1} / ${pool.length}`;let k=pool.filter(x=>state.known.includes(x.id)).length;$("progressText").textContent=`已掌握 ${k}`;$("bar").style.width=(k/pool.length*100)+"%";$("total").textContent=pool.length;$("known").textContent=state.known.length;$("fav").textContent=state.fav.length;showResults()}
-function flip(){flipped=!flipped;$("inner").classList.toggle("flip",flipped);$("flip").textContent=flipped?"返回正面":"显示答案"}
-function next(){if(!pool.length)return;idx=(idx+1)%pool.length;render()}
-function prev(){if(!pool.length)return;idx=(idx-1+pool.length)%pool.length;render()}
-function showResults(){let q=$("search").value.trim().toLowerCase();if(!q){$("results").innerHTML="";return}let arr=pool.slice(0,20);$("results").innerHTML=arr.length?arr.map((x,i)=>`<div class="result" data-id="${x.id}"><b>${esc(x.front)}</b><small>${esc(x.back)}</small></div>`).join(""):'<div class="empty">没有结果</div>';document.querySelectorAll(".result").forEach(r=>r.onclick=()=>{let p=pool.findIndex(x=>x.id==r.dataset.id);if(p>=0){idx=p;render()}})}
-function esc(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-$("flip").onclick=flip;$("card").onclick=flip;$("next").onclick=next;$("prev").onclick=prev;
-$("know").onclick=()=>{let id=pool[idx].id;if(!state.known.includes(id))state.known.push(id);save();render();setTimeout(next,180)}
-$("again").onclick=()=>{let id=pool[idx].id;if(!state.wrong.includes(id))state.wrong.push(id);save();next()}
-$("shuffle").onclick=()=>{for(let i=pool.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}idx=0;render()}
-$("type").onchange=()=>build();$("search").oninput=()=>build();
-document.onkeydown=e=>{if(e.key==="ArrowRight")next();if(e.key==="ArrowLeft")prev();if(e.key===" "){e.preventDefault();flip()}};
-fetch("cards.json").then(r=>r.json()).then(d=>{all=d;issue=issues()[0]||"01";renderTabs();build()}).catch(()=>{$("front").textContent="无法读取 cards.json";$("note").textContent="请确保 index.html 与 cards.json 放在同一目录。"});
+const $=id=>document.getElementById(id);
+
+function save(){localStorage.setItem("bilingual-card-state",JSON.stringify(state));}
+function issueList(){return [...new Set(all.map(x=>x.issue))].sort();}
+function renderTabs(){
+  $("tabs").innerHTML=issueList().map(x=>`<button class="tab ${x===issue?'active':''}" data-i="${x}">第 ${x} 期</button>`).join("");
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{issue=b.dataset.i;build();});
+}
+function build(preserve){
+  const t=$("type").value,s=$("search").value.trim().toLowerCase();
+  pool=all.filter(x=>x.issue===issue&&(t==="all"||x.type===t)&&(!s||(x.front+" "+x.back+" "+x.tag+" "+x.note).toLowerCase().includes(s)));
+  if(preserve){const p=pool.findIndex(x=>x.id===preserve);idx=p<0?0:p;}
+  else idx=Math.min(idx,Math.max(pool.length-1,0));
+  render();
+}
+function render(){
+  $("issue").textContent=`第 ${issue} 期`;
+  if(!pool.length){
+    $("front").textContent="没有找到卡片";
+    $("back").textContent="";
+    $("note").textContent="请更换搜索词或筛选条件";
+    $("counter").textContent="0 / 0";
+    $("progressText").textContent="已掌握 0";
+    $("bar").style.width="0%";
+    $("results").innerHTML='<div class="empty">没有找到匹配内容</div>';
+    return;
+  }
+  const c=pool[idx];
+  flipped=false;
+  $("inner").classList.remove("flip");
+  $("flip").textContent="显示答案";
+  $("front").textContent=c.front;
+  $("back").textContent=c.back;
+  $("tag").textContent=c.tag;
+  $("note").textContent=c.note;
+  $("counter").textContent=`${idx+1} / ${pool.length}`;
+  const k=pool.filter(x=>state.known.includes(x.id)).length;
+  $("progressText").textContent=`已掌握 ${k}`;
+  $("bar").style.width=(k/pool.length*100)+"%";
+  $("total").textContent=pool.length;
+  $("known").textContent=state.known.length;
+  $("fav").textContent=state.fav.length;
+  showResults();
+}
+function flip(){
+  if(!pool.length)return;
+  flipped=!flipped;
+  $("inner").classList.toggle("flip",flipped);
+  $("flip").textContent=flipped?"返回正面":"显示答案";
+}
+function next(){if(!pool.length)return;idx=(idx+1)%pool.length;render();}
+function prev(){if(!pool.length)return;idx=(idx-1+pool.length)%pool.length;render();}
+function showResults(){
+  const q=$("search").value.trim().toLowerCase();
+  if(!q){$("results").innerHTML="";return;}
+  const arr=pool.slice(0,20);
+  $("results").innerHTML=arr.length
+    ? `<div class="section-title"><span>搜索结果</span><span style="font-size:11px;color:#8995a3">${arr.length} 条</span></div>`+
+      arr.map(x=>`<div class="result" data-id="${x.id}"><b>${esc(x.front)}</b><small>${esc(x.back)}</small></div>`).join("")
+    : '<div class="empty">没有结果</div>';
+  document.querySelectorAll(".result").forEach(r=>r.onclick=()=>{
+    const p=pool.findIndex(x=>x.id==r.dataset.id); if(p>=0){idx=p;render();}
+  });
+}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+
+$("flip").onclick=flip;
+$("card").onclick=flip;
+$("next").onclick=next;
+$("prev").onclick=prev;
+$("know").onclick=()=>{
+  if(!pool.length)return;
+  const id=pool[idx].id;
+  if(!state.known.includes(id))state.known.push(id);
+  save();render();setTimeout(next,170);
+};
+$("again").onclick=()=>{
+  if(!pool.length)return;
+  const id=pool[idx].id;
+  if(!state.wrong.includes(id))state.wrong.push(id);
+  save();next();
+};
+$("shuffle").onclick=()=>{
+  for(let i=pool.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [pool[i],pool[j]]=[pool[j],pool[i]];
+  }
+  idx=0;render();
+};
+$("type").onchange=()=>build();
+$("search").oninput=()=>build();
+
+document.onkeydown=e=>{
+  if(e.key==="ArrowRight")next();
+  else if(e.key==="ArrowLeft")prev();
+  else if(e.key===" "){e.preventDefault();flip();}
+};
+
+let touchX=null;
+$("card").addEventListener("touchstart",e=>touchX=e.changedTouches[0].clientX,{passive:true});
+$("card").addEventListener("touchend",e=>{
+  if(touchX===null)return;
+  const dx=e.changedTouches[0].clientX-touchX;
+  if(Math.abs(dx)>60){dx<0?next():prev();}
+  touchX=null;
+},{passive:true});
+
+fetch("cards.json")
+.then(r=>r.json())
+.then(d=>{
+  all=d;
+  issue=issueList()[0]||"01";
+  renderTabs();
+  build();
+})
+.catch(()=>{
+  $("front").textContent="无法读取 cards.json";
+  $("note").textContent="请确保 index.html 与 cards.json 位于同一目录。";
+});
 </script>
-</body></html>
+</body>
+</html>
