@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>双语学习卡片</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--blue:#2563eb;--soft:#eff6ff;--green:#15803d;--red:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif}
+.app{max-width:960px;margin:auto;padding:14px 14px 40px}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+h1{font-size:25px;margin:0 0 5px}.sub{font-size:13px;color:var(--muted);line-height:1.5}.issue{font-weight:700;color:var(--blue);white-space:nowrap}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:12px;box-shadow:0 5px 18px #00000008}
+.tabs{display:flex;gap:8px;overflow:auto}.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 13px;white-space:nowrap}.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.search{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;font-size:15px;margin-bottom:8px}
+button,select{font:inherit;border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;min-height:42px;color:var(--text)}
+button.primary{background:var(--blue);border-color:var(--blue);color:white}
+.progressline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin:8px 2px}.bar{height:7px;background:#e5e7eb;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--blue);width:0}
+.card{perspective:1200px;touch-action:pan-y}.inner{position:relative;min-height:390px;transform-style:preserve-3d;transition:.4s}.inner.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 30px #0000000c;padding:23px;display:flex;flex-direction:column;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.back{transform:rotateY(180deg)}.pill{font-size:12px;background:var(--soft);color:var(--blue);padding:6px 10px;border-radius:99px;align-self:flex-start}.label{font-size:12px;color:var(--muted);margin-top:16px}.text{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-size:clamp(21px,4.5vw,34px);font-weight:650}.back .text{font-size:clamp(18px,4vw,27px);font-weight:500}.note{font-size:13px;line-height:1.6;color:#4b5563;background:#f8fafc;padding:10px 12px;border-radius:12px}.hint{text-align:center;color:var(--muted);font-size:12px}
+.actions{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;margin-top:10px}.actions button{min-height:48px}.subactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}
+.list{margin-top:12px}.result{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px;margin-bottom:8px}.result b{display:block;margin-bottom:5px}.result small{color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:24px}
+@media(max-width:560px){.inner{min-height:420px}.top{align-items:center}.controls{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div><h1>双语学习卡片</h1><div class="sub">微信群长期学习版 · 点击翻面 · 数据保存在本机</div></div><div class="issue" id="issue">第 01 期</div></div>
+
+<div class="panel">
+<div class="tabs" id="tabs"></div>
+</div>
+
+<div class="panel">
+<input class="search" id="search" placeholder="搜索中文、英文、标签……">
+<div class="controls">
+<select id="type"><option value="all">全部类型</option><option value="term">术语</option><option value="sentence">句子</option></select>
+<button id="shuffle">🔀 随机顺序</button>
+</div>
+</div>
+
+<div class="progressline"><span id="counter">1 / 6</span><span id="progressText">已掌握 0</span></div>
+<div class="bar"><i id="bar"></i></div>
+
+<div class="card" id="card"><div class="inner" id="inner">
+<section class="face"><span class="pill" id="tag">术语</span><div class="label">正面</div><div class="text" id="front"></div><div class="hint">点击卡片或“显示答案”</div></section>
+<section class="face back"><span class="pill">参考答案</span><div class="label">背面</div><div class="text" id="back"></div><div class="note" id="note"></div></section>
+</div></div>
+
+<div class="actions"><button id="prev">← 上一张</button><button class="primary" id="flip">显示答案</button><button id="next">下一张 →</button></div>
+<div class="subactions"><button id="again">🤔 再练</button><button id="know">✅ 已掌握</button></div>
+
+<div class="stats"><div class="stat"><b id="total">0</b><span>当前卡组</span></div><div class="stat"><b id="known">0</b><span>已掌握</span></div><div class="stat"><b id="fav">0</b><span>收藏</span></div></div>
+
+<div class="panel list" id="results"></div>
+</div>
+
+<script>
+let all=[], pool=[], idx=0, flipped=false, issue="01";
+let state=JSON.parse(localStorage.getItem("bilingual-card-state")||'{"known":[],"fav":[],"wrong":[]}');
+const $=x=>document.getElementById(x);
+function save(){localStorage.setItem("bilingual-card-state",JSON.stringify(state))}
+function issues(){return [...new Set(all.map(x=>x.issue))]}
+function renderTabs(){ $("tabs").innerHTML=issues().map(x=>`<button class="tab ${x===issue?'active':''}" data-i="${x}">第 ${x} 期</button>`).join("");document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{issue=b.dataset.i;build()})}
+function build(preserve){let t=$("type").value,s=$("search").value.trim().toLowerCase();pool=all.filter(x=>x.issue===issue&&(t==="all"||x.type===t)&&(!s||(x.front+" "+x.back+" "+x.tag+" "+x.note).toLowerCase().includes(s)));if(preserve){let p=pool.findIndex(x=>x.id===preserve);idx=p<0?0:p}else idx=Math.min(idx,Math.max(0,pool.length-1));render()}
+function render(){if(!pool.length){$("front").textContent="没有找到卡片";$("back").textContent="";$("note").textContent="请更换搜索词或筛选条件";return}let c=pool[idx];flipped=false;$("inner").classList.remove("flip");$("flip").textContent="显示答案";$("front").textContent=c.front;$("back").textContent=c.back;$("tag").textContent=c.tag;$("note").textContent=c.note;$("counter").textContent=`${idx+1} / ${pool.length}`;let k=pool.filter(x=>state.known.includes(x.id)).length;$("progressText").textContent=`已掌握 ${k}`;$("bar").style.width=(k/pool.length*100)+"%";$("total").textContent=pool.length;$("known").textContent=state.known.length;$("fav").textContent=state.fav.length;showResults()}
+function flip(){flipped=!flipped;$("inner").classList.toggle("flip",flipped);$("flip").textContent=flipped?"返回正面":"显示答案"}
+function next(){if(!pool.length)return;idx=(idx+1)%pool.length;render()}
+function prev(){if(!pool.length)return;idx=(idx-1+pool.length)%pool.length;render()}
+function showResults(){let q=$("search").value.trim().toLowerCase();if(!q){$("results").innerHTML="";return}let arr=pool.slice(0,20);$("results").innerHTML=arr.length?arr.map((x,i)=>`<div class="result" data-id="${x.id}"><b>${esc(x.front)}</b><small>${esc(x.back)}</small></div>`).join(""):'<div class="empty">没有结果</div>';document.querySelectorAll(".result").forEach(r=>r.onclick=()=>{let p=pool.findIndex(x=>x.id==r.dataset.id);if(p>=0){idx=p;render()}})}
+function esc(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+$("flip").onclick=flip;$("card").onclick=flip;$("next").onclick=next;$("prev").onclick=prev;
+$("know").onclick=()=>{let id=pool[idx].id;if(!state.known.includes(id))state.known.push(id);save();render();setTimeout(next,180)}
+$("again").onclick=()=>{let id=pool[idx].id;if(!state.wrong.includes(id))state.wrong.push(id);save();next()}
+$("shuffle").onclick=()=>{for(let i=pool.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}idx=0;render()}
+$("type").onchange=()=>build();$("search").oninput=()=>build();
+document.onkeydown=e=>{if(e.key==="ArrowRight")next();if(e.key==="ArrowLeft")prev();if(e.key===" "){e.preventDefault();flip()}};
+fetch("cards.json").then(r=>r.json()).then(d=>{all=d;issue=issues()[0]||"01";renderTabs();build()}).catch(()=>{$("front").textContent="无法读取 cards.json";$("note").textContent="请确保 index.html 与 cards.json 放在同一目录。"});
+</script>
+</body></html>
