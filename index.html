@@ -3,400 +3,359 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1f3a">
+<meta name="theme-color" content="#f5f5f7">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>双语学习卡片</title>
+<title>双语研习卡片</title>
 <style>
-:root{
-  --navy:#0b1f3a;
-  --navy-2:#17375e;
-  --blue:#1f5fa8;
-  --blue-soft:#eef5fc;
-  --gold:#b68b2c;
-  --gold-soft:#fbf6e8;
-  --ink:#182230;
-  --muted:#657386;
-  --line:#dfe6ee;
-  --bg:#f4f6f9;
-  --white:#fff;
-  --green:#1f7a4d;
-  --shadow:0 14px 40px rgba(11,31,58,.08);
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-secondary: #86868b;
+  --accent-blue: #0066cc;
+  --accent-light: #e8f0fe;
+  --border-color: #d2d2d7;
+  --shadow-sm: 0 2px 10px rgba(0,0,0,0.03);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.06);
 }
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  background:linear-gradient(180deg,#f7f9fb 0,#f3f5f8 100%);
-  color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",
-  "Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.app{max-width:1040px;margin:0 auto;padding:0 16px 44px}
-.topbar{
-  margin:0 -16px 22px;
-  background:linear-gradient(135deg,var(--navy) 0%,#12345a 100%);
-  color:#fff;
-  padding:22px max(16px,calc((100vw - 1040px)/2 + 16px)) 20px;
-  box-shadow:0 6px 22px rgba(11,31,58,.14);
+header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 }
-.brand-row{
-  display:flex;justify-content:space-between;gap:18px;align-items:flex-start;
-}
-.eyebrow{
-  display:flex;align-items:center;gap:8px;
-  text-transform:uppercase;letter-spacing:.08em;
-  font-size:11px;color:#b8cadc;font-weight:700;
-}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--gold)}
-h1{font-size:29px;line-height:1.18;margin:7px 0 5px;font-weight:720;letter-spacing:-.02em}
-.sub{font-size:13px;color:#d4deea;line-height:1.6}
-.issue{
-  color:#f7df9a;border:1px solid rgba(247,223,154,.45);
-  border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;white-space:nowrap;
+.title-area h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+.title-area p { margin: 4px 0 0; font-size: 13px; color: var(--text-secondary); }
+.issue-badge {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-main);
+  box-shadow: var(--shadow-sm);
 }
 
-.panel{
-  background:rgba(255,255,255,.96);
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:12px;
-  margin-bottom:12px;
-  box-shadow:0 5px 20px rgba(11,31,58,.04);
-}
-.tabs{display:flex;gap:8px;overflow:auto;padding:1px}
-.tab{
-  border:1px solid var(--line);background:#fff;color:var(--muted);
-  border-radius:10px;padding:9px 13px;white-space:nowrap;min-height:40px;
-  font-weight:600;
-}
-.tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
-
-.search{
-  width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;
-  font-size:15px;outline:none;background:#fbfcfe;
-}
-.search:focus{border-color:#8cafcf;box-shadow:0 0 0 3px rgba(31,95,168,.08)}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-button,select{
-  font:inherit;border:1px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:11px;padding:10px 12px;min-height:42px;cursor:pointer;
-}
-button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
-button.gold{background:var(--gold-soft);border-color:#ead9a9;color:#7f6220}
-
-.progressline{
-  display:flex;justify-content:space-between;color:var(--muted);
-  font-size:12px;margin:10px 2px 7px;
-}
-.bar{height:6px;background:#e8edf3;border-radius:999px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),#5f92c5);transition:width .25s}
-
-.card{perspective:1400px;touch-action:pan-y;margin-top:14px}
-.inner{
-  position:relative;min-height:430px;
-  transform-style:preserve-3d;transition:transform .48s cubic-bezier(.2,.7,.2,1);
-}
-.inner.flip{transform:rotateY(180deg)}
-.face{
-  position:absolute;inset:0;
-  background:#fff;border:1px solid #dce4ed;border-radius:24px;
-  box-shadow:var(--shadow);padding:26px 28px;
-  display:flex;flex-direction:column;
-  backface-visibility:hidden;-webkit-backface-visibility:hidden;
-}
-.back{transform:rotateY(180deg)}
-
-.meta-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.pill{
-  font-size:11px;font-weight:700;letter-spacing:.02em;
-  color:var(--blue);background:var(--blue-soft);
-  border:1px solid #d9e8f8;padding:6px 10px;border-radius:999px;
-}
-.mini{font-size:11px;color:#8793a2}
-.label{
-  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-  color:#8995a3;margin-top:17px;font-weight:700;
-}
-.text{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;
-  line-height:1.72;font-size:clamp(24px,4.5vw,36px);
-  font-weight:680;letter-spacing:-.01em;padding:16px 10px;
-}
-.back .text{
-  display:block;align-self:stretch;
-  text-align:left;font-size:clamp(18px,3.5vw,24px);
-  line-height:1.95;font-weight:450;letter-spacing:0;padding:18px 4px 10px;
-}
-.back .text::first-line{font-weight:520}
-
-.divider{height:1px;background:#edf1f5;margin:4px 0 11px}
-.note{
-  font-size:13px;line-height:1.72;color:#4f5e6d;
-  background:#f8fafc;border:1px solid #e9eef3;
-  padding:12px 14px;border-radius:13px;
-}
-.note::before{
-  content:"学习提示";
-  display:block;font-size:10px;font-weight:800;letter-spacing:.08em;
-  color:var(--gold);margin-bottom:4px;text-transform:uppercase;
-}
-.hint{text-align:center;color:#8a95a3;font-size:12px;margin-top:10px}
-
-.actions{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:8px;margin-top:10px}
-.actions button{min-height:48px;font-weight:650}
-.subactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.stat{
-  background:#fff;border:1px solid var(--line);border-radius:13px;
-  padding:11px;text-align:center;box-shadow:0 4px 14px rgba(11,31,58,.03)
-}
-.stat b{display:block;font-size:18px;color:var(--navy)}
-.stat span{font-size:11px;color:var(--muted)}
-
-.section-title{
-  display:flex;justify-content:space-between;align-items:center;
-  font-weight:700;font-size:14px;margin-bottom:10px
-}
-.result{
-  background:#fff;border:1px solid var(--line);border-radius:13px;
-  padding:12px;margin-bottom:8px;cursor:pointer;
-}
-.result:hover{border-color:#b8cee4;background:#fcfdff}
-.result b{display:block;margin-bottom:5px;line-height:1.5}
-.result small{display:block;color:var(--muted);line-height:1.55}
-.empty{text-align:center;color:var(--muted);padding:24px 10px;font-size:13px}
-
-.footer-note{
-  text-align:center;color:#97a1ad;font-size:11px;line-height:1.7;margin-top:18px
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-@media(max-width:620px){
-  .app{padding:0 12px 34px}
-  .topbar{margin:0 -12px 18px;padding:18px 12px 17px}
-  h1{font-size:25px}
-  .brand-row{gap:10px}
-  .issue{font-size:11px;padding:6px 9px}
-  .controls{grid-template-columns:1fr}
-  .inner{min-height:455px}
-  .face{padding:21px 18px;border-radius:21px}
-  .text{font-size:clamp(22px,6vw,31px);padding:10px 2px}
-  .back .text{font-size:clamp(17px,4.7vw,21px);line-height:1.9}
+/* Common Card Styles */
+.card-wrapper {
+  width: 100%;
+  max-width: 600px;
+  min-height: 420px;
+  cursor: pointer;
+  position: relative;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent-blue);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.note-box {
+  background: #f9f9fb;
+  border-left: 3px solid #d2d2d7;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  color: #555;
+  margin-top: 24px;
+  line-height: 1.6;
+}
+
+/* --- Term Card (Flip) --- */
+.term-container {
+  perspective: 1400px;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+}
+.term-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.term-inner.flip { transform: rotateY(180deg); }
+.term-face {
+  position: absolute;
+  inset: 0;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.term-back { transform: rotateY(180deg); }
+.term-text { font-size: 28px; font-weight: 600; line-height: 1.4; color: var(--text-main); }
+.term-back .term-text { font-size: 22px; font-weight: 500; }
+
+/* --- Sentence Card (Expand) --- */
+.sentence-container {
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 420px;
+  transition: all 0.3s ease;
+}
+.sentence-front {
+  font-size: 20px;
+  line-height: 1.8;
+  font-weight: 500;
+  color: var(--text-main);
+}
+.sentence-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 24px 0;
+  opacity: 0.5;
+}
+.sentence-back-text {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #333336;
+}
+
+.hint-text {
+  margin-top: auto;
+  padding-top: 30px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 30px auto 40px;
+  padding: 0 24px;
+}
+.btn {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+}
+.btn:hover { background: #f9f9fb; }
+.btn:active { transform: scale(0.97); }
+.counter { font-size: 14px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+
+@media(max-width: 600px) {
+  .term-face, .sentence-container { padding: 30px 24px; }
+  .term-text { font-size: 24px; }
+  .term-back .term-text { font-size: 20px; }
+  .sentence-front { font-size: 18px; }
+  .sentence-back-text { font-size: 16px; }
 }
 </style>
 </head>
 <body>
-<div class="app">
 
-<header class="topbar">
-  <div class="brand-row">
-    <div>
-      <div class="eyebrow"><span class="dot"></span> Bilingual Learning Series</div>
-      <h1>双语学习卡片</h1>
-      <div class="sub">政经英语 · 金融英语 · 官方表达</div>
-    </div>
-    <div class="issue" id="issue">第 01 期</div>
+<header>
+  <div class="title-area">
+    <h1>双语研习库</h1>
+    <p>术语提取 · 视译研读</p>
   </div>
+  <div class="issue-badge" id="issue-display">第 01 期</div>
 </header>
 
-<section class="panel">
-  <div class="tabs" id="tabs"></div>
-</section>
-
-<section class="panel">
-  <input class="search" id="search" placeholder="搜索中文、英文或标签……">
-  <div class="controls">
-    <select id="type">
-      <option value="all">全部内容</option>
-      <option value="term">术语</option>
-      <option value="sentence">句子</option>
-    </select>
-    <button id="shuffle">🔀 随机练习</button>
-  </div>
-</section>
-
-<div class="progressline"><span id="counter">1 / 6</span><span id="progressText">已掌握 0</span></div>
-<div class="bar"><i id="bar"></i></div>
-
 <main>
-<div class="card" id="card">
-  <div class="inner" id="inner">
-
-    <section class="face">
-      <div class="meta-row">
-        <span class="pill" id="tag">术语</span>
-        <span class="mini">先思考，再翻卡</span>
+  <div class="card-wrapper" id="card-area">
+    
+    <!-- 术语卡片：翻转效果 -->
+    <div class="term-container" id="term-view" style="display: none;">
+      <div class="term-inner" id="term-inner">
+        <!-- 正面 -->
+        <div class="term-face">
+          <div class="tag" id="term-tag"></div>
+          <div class="term-text" id="term-front"></div>
+          <div class="hint-text">点击卡片查看对照</div>
+        </div>
+        <!-- 背面 -->
+        <div class="term-face term-back">
+          <div class="tag">参考译文</div>
+          <div class="term-text" id="term-back"></div>
+          <div class="note-box" id="term-note"></div>
+        </div>
       </div>
-      <div class="label">Front · 正面</div>
-      <div class="text" id="front"></div>
-      <div class="hint">点击卡片或下方按钮查看答案</div>
-    </section>
+    </div>
 
-    <section class="face back">
-      <div class="meta-row">
-        <span class="pill">参考答案</span>
-        <span class="mini">Back · 背面</span>
+    <!-- 句子卡片：上下展开效果 -->
+    <div class="sentence-container" id="sentence-view" style="display: none;">
+      <div class="tag" id="sentence-tag"></div>
+      <div class="sentence-front" id="sentence-front"></div>
+      
+      <div id="sentence-back-wrapper" style="display: none;">
+        <div class="sentence-divider"></div>
+        <div class="sentence-back-text" id="sentence-back"></div>
+        <div class="note-box" id="sentence-note"></div>
       </div>
-      <div class="label">Reference · 参考译文</div>
-      <div class="text" id="back"></div>
-      <div class="divider"></div>
-      <div class="note" id="note"></div>
-    </section>
+      
+      <div class="hint-text" id="sentence-hint">点击空白处展开对照</div>
+    </div>
 
   </div>
-</div>
-
-<div class="actions">
-  <button id="prev">← 上一张</button>
-  <button class="primary" id="flip">显示答案</button>
-  <button id="next">下一张 →</button>
-</div>
-
-<div class="subactions">
-  <button id="again">🤔 再练</button>
-  <button class="gold" id="know">✓ 已掌握</button>
-</div>
-
-<div class="stats">
-  <div class="stat"><b id="total">0</b><span>当前卡组</span></div>
-  <div class="stat"><b id="known">0</b><span>已掌握</span></div>
-  <div class="stat"><b id="fav">0</b><span>收藏</span></div>
-</div>
-
-<section class="panel list" id="results" style="margin-top:14px"></section>
-
-<div class="footer-note">
-  本地学习记录保存在当前设备浏览器中，不上传学习数据。<br>
-  网站内容由卡片数据文件统一维护。
-</div>
 </main>
+
+<div class="controls">
+  <button class="btn" id="btn-prev">← 上一页</button>
+  <div class="counter" id="counter">1 / 6</div>
+  <button class="btn" id="btn-next">下一页 →</button>
 </div>
 
 <script>
-let all=[], pool=[], idx=0, flipped=false, issue="01";
-let state=JSON.parse(localStorage.getItem("bilingual-card-state")||'{"known":[],"fav":[],"wrong":[]}');
-const $=id=>document.getElementById(id);
+let pool = [];
+let currentIdx = 0;
+const $ = id => document.getElementById(id);
 
-function save(){localStorage.setItem("bilingual-card-state",JSON.stringify(state));}
-function issueList(){return [...new Set(all.map(x=>x.issue))].sort();}
-function renderTabs(){
-  $("tabs").innerHTML=issueList().map(x=>`<button class="tab ${x===issue?'active':''}" data-i="${x}">第 ${x} 期</button>`).join("");
-  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{issue=b.dataset.i;build();});
-}
-function build(preserve){
-  const t=$("type").value,s=$("search").value.trim().toLowerCase();
-  pool=all.filter(x=>x.issue===issue&&(t==="all"||x.type===t)&&(!s||(x.front+" "+x.back+" "+x.tag+" "+x.note).toLowerCase().includes(s)));
-  if(preserve){const p=pool.findIndex(x=>x.id===preserve);idx=p<0?0:p;}
-  else idx=Math.min(idx,Math.max(pool.length-1,0));
-  render();
-}
-function render(){
-  $("issue").textContent=`第 ${issue} 期`;
-  if(!pool.length){
-    $("front").textContent="没有找到卡片";
-    $("back").textContent="";
-    $("note").textContent="请更换搜索词或筛选条件";
-    $("counter").textContent="0 / 0";
-    $("progressText").textContent="已掌握 0";
-    $("bar").style.width="0%";
-    $("results").innerHTML='<div class="empty">没有找到匹配内容</div>';
-    return;
+// 核心渲染逻辑
+function renderCard() {
+  if (!pool.length) return;
+  const card = pool[currentIdx];
+  $('counter').textContent = `${currentIdx + 1} / ${pool.length}`;
+  $('issue-display').textContent = `第 ${card.issue} 期`;
+
+  if (card.type === 'term') {
+    // 渲染术语卡片
+    $('term-view').style.display = 'block';
+    $('sentence-view').style.display = 'none';
+    $('term-inner').classList.remove('flip'); // 重置翻转状态
+
+    $('term-tag').textContent = card.tag;
+    $('term-front').textContent = card.front;
+    $('term-back').textContent = card.back;
+    
+    if (card.note) {
+      $('term-note').textContent = card.note;
+      $('term-note').style.display = 'block';
+    } else {
+      $('term-note').style.display = 'none';
+    }
+
+  } else {
+    // 渲染句子卡片
+    $('term-view').style.display = 'none';
+    $('sentence-view').style.display = 'flex';
+    $('sentence-back-wrapper').style.display = 'none'; // 初始隐藏背面
+    $('sentence-hint').style.display = 'block';
+
+    $('sentence-tag').textContent = card.tag;
+    $('sentence-front').textContent = card.front;
+    $('sentence-back').textContent = card.back;
+
+    if (card.note) {
+      $('sentence-note').textContent = card.note;
+      $('sentence-note').style.display = 'block';
+    } else {
+      $('sentence-note').style.display = 'none';
+    }
   }
-  const c=pool[idx];
-  flipped=false;
-  $("inner").classList.remove("flip");
-  $("flip").textContent="显示答案";
-  $("front").textContent=c.front;
-  $("back").textContent=c.back;
-  $("tag").textContent=c.tag;
-  $("note").textContent=c.note;
-  $("counter").textContent=`${idx+1} / ${pool.length}`;
-  const k=pool.filter(x=>state.known.includes(x.id)).length;
-  $("progressText").textContent=`已掌握 ${k}`;
-  $("bar").style.width=(k/pool.length*100)+"%";
-  $("total").textContent=pool.length;
-  $("known").textContent=state.known.length;
-  $("fav").textContent=state.fav.length;
-  showResults();
 }
-function flip(){
-  if(!pool.length)return;
-  flipped=!flipped;
-  $("inner").classList.toggle("flip",flipped);
-  $("flip").textContent=flipped?"返回正面":"显示答案";
-}
-function next(){if(!pool.length)return;idx=(idx+1)%pool.length;render();}
-function prev(){if(!pool.length)return;idx=(idx-1+pool.length)%pool.length;render();}
-function showResults(){
-  const q=$("search").value.trim().toLowerCase();
-  if(!q){$("results").innerHTML="";return;}
-  const arr=pool.slice(0,20);
-  $("results").innerHTML=arr.length
-    ? `<div class="section-title"><span>搜索结果</span><span style="font-size:11px;color:#8995a3">${arr.length} 条</span></div>`+
-      arr.map(x=>`<div class="result" data-id="${x.id}"><b>${esc(x.front)}</b><small>${esc(x.back)}</small></div>`).join("")
-    : '<div class="empty">没有结果</div>';
-  document.querySelectorAll(".result").forEach(r=>r.onclick=()=>{
-    const p=pool.findIndex(x=>x.id==r.dataset.id); if(p>=0){idx=p;render();}
-  });
-}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
 
-$("flip").onclick=flip;
-$("card").onclick=flip;
-$("next").onclick=next;
-$("prev").onclick=prev;
-$("know").onclick=()=>{
-  if(!pool.length)return;
-  const id=pool[idx].id;
-  if(!state.known.includes(id))state.known.push(id);
-  save();render();setTimeout(next,170);
+// 交互逻辑：点击术语翻转
+$('term-view').onclick = () => {
+  $('term-inner').classList.toggle('flip');
 };
-$("again").onclick=()=>{
-  if(!pool.length)return;
-  const id=pool[idx].id;
-  if(!state.wrong.includes(id))state.wrong.push(id);
-  save();next();
-};
-$("shuffle").onclick=()=>{
-  for(let i=pool.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [pool[i],pool[j]]=[pool[j],pool[i]];
+
+// 交互逻辑：点击句子展开
+$('sentence-view').onclick = () => {
+  const wrapper = $('sentence-back-wrapper');
+  const hint = $('sentence-hint');
+  if (wrapper.style.display === 'none') {
+    wrapper.style.display = 'block';
+    hint.style.display = 'none';
   }
-  idx=0;render();
-};
-$("type").onchange=()=>build();
-$("search").oninput=()=>build();
-
-document.onkeydown=e=>{
-  if(e.key==="ArrowRight")next();
-  else if(e.key==="ArrowLeft")prev();
-  else if(e.key===" "){e.preventDefault();flip();}
 };
 
-let touchX=null;
-$("card").addEventListener("touchstart",e=>touchX=e.changedTouches[0].clientX,{passive:true});
-$("card").addEventListener("touchend",e=>{
-  if(touchX===null)return;
-  const dx=e.changedTouches[0].clientX-touchX;
-  if(Math.abs(dx)>60){dx<0?next():prev();}
-  touchX=null;
-},{passive:true});
+// 按钮导航
+$('btn-prev').onclick = () => {
+  if (pool.length === 0) return;
+  currentIdx = (currentIdx - 1 + pool.length) % pool.length;
+  renderCard();
+};
+$('btn-next').onclick = () => {
+  if (pool.length === 0) return;
+  currentIdx = (currentIdx + 1) % pool.length;
+  renderCard();
+};
 
+// 键盘左右键导航，空格键翻转/展开
+document.onkeydown = (e) => {
+  if (e.key === "ArrowRight") $('btn-next').click();
+  else if (e.key === "ArrowLeft") $('btn-prev').click();
+  else if (e.key === " ") {
+    e.preventDefault();
+    const card = pool[currentIdx];
+    if (card.type === 'term') $('term-view').click();
+    else $('sentence-view').click();
+  }
+};
+
+// 加载数据
 fetch("cards.json")
-.then(r=>r.json())
-.then(d=>{
-  all=d;
-  issue=issueList()[0]||"01";
-  renderTabs();
-  build();
-})
-.catch(()=>{
-  $("front").textContent="无法读取 cards.json";
-  $("note").textContent="请确保 index.html 与 cards.json 位于同一目录。";
-});
+  .then(res => res.json())
+  .then(data => {
+    pool = data;
+    renderCard();
+  })
+  .catch(err => {
+    $('term-view').style.display = 'block';
+    $('term-front').textContent = "数据加载失败";
+    $('term-note').textContent = "请确保当前环境支持 fetch 请求，且 cards.json 存在。";
+  });
 </script>
 </body>
 </html>
