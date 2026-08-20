@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f5f7">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<!-- 新增下面这一行：解决微信环境防盗链拦截 -->
+<meta name="referrer" content="no-referrer">
 <title>双语研习库</title>
 <style>
 :root {
@@ -296,6 +298,9 @@ main {
 </head>
 <body>
 
+<!-- 新增下面这一行：固定音频标签，专门应付微信的播放限制 -->
+<audio id="tts-player" style="display:none;" playsinline></audio>
+
 <header>
   <div class="title-area">
     <h1>双语研习库</h1>
@@ -398,17 +403,23 @@ function saveState() {
   localStorage.setItem("bilingual-minimal-state", JSON.stringify(state));
 }
 
-  // --- 纯英文语音朗读 (兼容微信版) ---
+// --- 纯英文语音朗读 (微信终极兼容版) ---
 function speakEnglish(text) {
-  // 1. 使用有道词典的免费发音接口（type=2 为美音，type=1 为英音）
   const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
-  const audio = new Audio(url);
+  const player = document.getElementById('tts-player');
   
-  // 2. 尝试播放
-  audio.play().catch(err => {
-    console.warn("在线语音播放失败，尝试使用系统自带语音...", err);
+  // 1. 停止上一条声音
+  player.pause();
+  
+  // 2. 赋予新链接
+  player.src = url;
+  
+  // 3. 强制加载并播放
+  player.load();
+  player.play().catch(err => {
+    console.warn("在线语音播放失败，尝试降级系统语音...", err);
     
-    // 3. 降级方案：如果在线接口失效（比如没网），退回使用系统自带 TTS
+    // 降级方案：如果断网了，退回系统 TTS
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel(); 
       const msg = new SpeechSynthesisUtterance(text);
@@ -416,7 +427,7 @@ function speakEnglish(text) {
       msg.rate = 0.9;     
       window.speechSynthesis.speak(msg);
     } else {
-      alert("当前微信环境不支持发音，请点击右上角“在浏览器打开”进行学习。");
+      alert("当前微信限制了发音，请点击右上角...选择“在浏览器打开”。");
     }
   });
 }
