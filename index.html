@@ -565,7 +565,7 @@ document.onkeydown = (e) => {
 };
 
 // 初始加载
-fetch("cards.json")
+fetch("cards.json?t=" + new Date().getTime())
   .then(res => res.json())
   .then(data => {
     allData = data;
