@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>双语研习库 (沉浸阅读版)</title>
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-secondary: #86868b;
+  --accent-blue: #0066cc;
+  --accent-light: #e8f0fe;
+  --border-color: #d2d2d7;
+  --shadow-sm: 0 2px 10px rgba(0,0,0,0.03);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 顶部标题区 */
+header {
+  padding: 20px 24px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+.title-area h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+.title-area p { margin: 4px 0 0; font-size: 13px; color: var(--text-secondary); }
+
+/* 模式切换按钮样式（写在内联标签里了，这里就不额外加了） */
+
+/* 极简工具栏 */
+.toolbar {
+  max-width: 650px;
+  margin: 10px auto 20px;
+  padding: 0 24px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.issue-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.issue-tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  background: #e8e8ed;
+  color: var(--text-secondary);
+  border: none;
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--text-main);
+  color: #fff;
+}
+.search-row {
+  display: flex;
+  gap: 10px;
+}
+.search-input {
+  flex: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  background: var(--card-bg);
+  outline: none;
+  box-shadow: var(--shadow-sm);
+}
+.search-input:focus { border-color: var(--accent-blue); }
+.type-select {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: var(--card-bg);
+  color: var(--text-main);
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 24px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Common Card Styles */
+.card-wrapper {
+  width: 100%;
+  max-width: 600px;
+  min-height: 380px;
+  cursor: pointer;
+  position: relative;
+}
+.tag {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent-blue);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.note-box {
+  background: #f9f9fb;
+  border-left: 3px solid #d2d2d7;
+  padding: 14px 18px; 
+  border-radius: 0 8px 8px 0;
+  font-size: 15.5px; 
+  color: #2c2c2e; 
+  margin-top: 24px;
+  line-height: 1.75;
+}
+
+.hint-text {
+  margin-top: auto;
+  padding-top: 30px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* 音频按钮 */
+.play-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--accent-blue);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+.play-btn:active { transform: scale(0.9); }
+.header-row { display: flex; justify-content: space-between; align-items: flex-start; }
+
+/* --- Sentence Card (Expand) --- */
+.sentence-container {
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 380px;
+  transition: all 0.3s ease;
+}
+.sentence-front {
+  font-size: 20px;
+  line-height: 1.8;
+  font-weight: 500;
+  color: var(--text-main);
+}
+.sentence-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 24px 0;
+  opacity: 0.5;
+}
+.sentence-back-text {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #333336;
+}
+
+/* 控制与反馈区 */
+.bottom-area {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  padding: 0 24px;
+}
+.nav-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.btn {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+}
+.btn:hover { background: #f9f9fb; }
+.btn:active { transform: scale(0.97); }
+.counter { font-size: 14px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+
+.feedback-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+.fb-btn {
+  background: none; border: none; padding: 10px 16px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text-main);
+}
+.fb-btn:hover { background: var(--bg-color); }
+.fb-btn.know { color: #008a00; }
+.fb-btn.again { color: #d95000; }
+.stats-text { font-size: 12px; color: var(--text-secondary); }
+
+/* --- 手机端专项适配 --- */
+@media(max-width: 600px) {
+  .sentence-container { padding: 30px 24px; }
+  .sentence-front { font-size: 18px; }
+  .sentence-back-text { font-size: 16px; }
+  .search-row { flex-direction: column; }
+  .note-box { font-size: 16.5px; padding: 16px; line-height: 1.8; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-area">
+    <h1>双语研习库 <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal; margin-left: 4px;">沉浸版</span></h1>
+    <p>全部内容采用上下对照模式</p>
+  </div>
+  <!-- ★ 这里就是一键切换到 Plan A 的按钮 ★ -->
+  <a href="index.html" style="font-size:13px; color:var(--accent-blue); text-decoration:none; background:var(--accent-light); padding:6px 12px; border-radius:14px; font-weight:500; transition:opacity 0.2s;">🔄 翻转模式</a>
+</header>
+
+<!-- 工具栏 -->
+<div class="toolbar">
+  <div class="issue-tabs" id="issue-tabs"></div>
+  <div class="search-row">
+    <input type="text" class="search-input" id="search" placeholder="搜索中英文或标签...">
+    <select class="type-select" id="type-select">
+      <option value="all">全部类型</option>
+      <option value="term">仅术语</option>
+      <option value="sentence">仅句子</option>
+    </select>
+    <select class="type-select" id="status-select">
+      <option value="all">所有状态</option>
+      <option value="wrong">🤔 需重练</option>
+      <option value="known">✓ 已掌握</option>
+    </select>
+  </div>
+</div>
+
+<main>
+  <div class="card-wrapper" id="card-area">
+    
+    <!-- 统一使用的句子卡片：上下展开 -->
+    <div class="sentence-container" id="sentence-view" style="display: none;">
+      <div class="tag" id="sentence-tag"></div>
+      <div class="sentence-front" id="sentence-front"></div>
+      
+      <div id="sentence-back-wrapper" style="display: none;">
+        <div class="sentence-divider"></div>
+        <div class="header-row" style="margin-bottom: 12px;">
+          <div style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">REFERENCE</div>
+          <button class="play-btn" id="play-sentence-back" title="朗读英文">🔊</button>
+        </div>
+        <div class="sentence-back-text" id="sentence-back"></div>
+        <div class="note-box" id="sentence-note"></div>
+      </div>
+      
+      <div class="hint-text" id="sentence-hint">点击空白处展开对照</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- 底部控制与进度区 -->
+<div class="bottom-area">
+  <div class="nav-controls">
+    <button class="btn" id="btn-prev">← 上一页</button>
+    <div class="counter" id="counter">1 / 6</div>
+    <button class="btn" id="btn-next">下一页 →</button>
+  </div>
+  
+  <div class="feedback-controls">
+    <button class="fb-btn again" id="btn-again">🤔 需重练</button>
+    <div class="stats-text">卡组进度: <span id="stat-known">0</span></div>
+    <button class="fb-btn know" id="btn-know">✓ 已掌握</button>
+  </div>
+</div>
+
+<script>
+let allData = [];
+let pool = [];
+let currentIdx = 0;
+let currentIssue = "01";
+let state = JSON.parse(localStorage.getItem("bilingual-minimal-state") || '{"known":[],"wrong":[]}');
+
+// --- 强制清洗旧数据：如果已经在“重练”里，就从“已掌握”剔除 ---
+state.known = state.known.filter(id => !state.wrong.includes(id));
+
+const $ = id => document.getElementById(id);
+
+// --- 本地进度存储 ---
+function saveState() {
+  localStorage.setItem("bilingual-minimal-state", JSON.stringify(state));
+}
+
+// --- 纯英文语音朗读 (兼容微信版) ---
+function speakEnglish(text) {
+  // 1. 使用有道词典的免费发音接口（type=2 为美音，type=1 为英音）
+  const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
+  const audio = new Audio(url);
+  
+  // 2. 尝试播放
+  audio.play().catch(err => {
+    console.warn("在线语音播放失败，尝试使用系统自带语音...", err);
+    
+    // 3. 降级方案：如果在线接口失效（比如没网），退回使用系统自带 TTS
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel(); 
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US'; 
+      msg.rate = 0.9;     
+      window.speechSynthesis.speak(msg);
+    } else {
+      alert("当前微信环境不支持发音，请点击右上角“在浏览器打开”进行学习。");
+    }
+  });
+}
+
+// --- 渲染期数 Tabs ---
+function renderTabs() {
+  const issues = [...new Set(allData.map(x => x.issue))].sort();
+  if (issues.length === 0) return;
+  if (!issues.includes(currentIssue)) currentIssue = issues[0];
+  
+  $('issue-tabs').innerHTML = issues.map(iss => 
+    `<button class="tab-btn ${iss === currentIssue ? 'active' : ''}" data-iss="${iss}">第 ${iss} 期</button>`
+  ).join('');
+  
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      currentIssue = btn.getAttribute('data-iss');
+      buildPool();
+    };
+  });
+}
+
+// --- 构建当前卡片池 (加入状态筛选逻辑) ---
+function buildPool() {
+  const query = $('search').value.trim().toLowerCase();
+  const typeFilter = $('type-select').value;
+  const statusFilter = $('status-select').value;
+  
+  pool = allData.filter(card => {
+    const matchIssue = card.issue === currentIssue;
+    const matchType = typeFilter === 'all' || card.type === typeFilter;
+    const matchSearch = !query || (card.front + " " + card.back + " " + card.tag).toLowerCase().includes(query);
+    
+    // 检查状态
+    let matchStatus = true;
+    if (statusFilter === 'known') matchStatus = state.known.includes(card.id);
+    if (statusFilter === 'wrong') matchStatus = state.wrong.includes(card.id);
+    
+    return matchIssue && matchType && matchSearch && matchStatus;
+  });
+  
+  currentIdx = 0;
+  renderTabs(); 
+  renderCard();
+}
+
+// --- 渲染卡片内容 (Plan B：统一为上下展开模式) ---
+function renderCard() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel(); 
+  
+  // 更新统计数据
+  const knownCount = pool.filter(x => state.known.includes(x.id)).length;
+  $('stat-known').textContent = `${knownCount} / ${pool.length} (已掌握)`;
+
+  if (!pool.length) {
+    $('counter').textContent = `0 / 0`;
+    $('sentence-view').style.display = 'flex';
+    $('sentence-back-wrapper').style.display = 'none';
+    $('sentence-hint').style.display = 'none'; // 空白提示隐藏
+    $('sentence-tag').textContent = "提示";
+    $('sentence-front').textContent = "未找到符合条件的卡片";
+    $('sentence-back').textContent = "";
+    $('sentence-note').style.display = 'none';
+    return;
+  }
+
+  const card = pool[currentIdx];
+  $('counter').textContent = `${currentIdx + 1} / ${pool.length}`;
+
+  // 无论术语还是句子，全部使用“上下展开”视图
+  $('sentence-view').style.display = 'flex';
+  $('sentence-back-wrapper').style.display = 'none'; // 默认折叠参考译文
+  $('sentence-hint').style.display = 'block';
+
+  $('sentence-tag').textContent = card.tag;
+  $('sentence-front').textContent = card.front;
+  $('sentence-back').textContent = card.back;
+
+  // 渲染注释 (Notes)
+  if (card.note) {
+    $('sentence-note').textContent = card.note;
+    $('sentence-note').style.display = 'block';
+  } else {
+    $('sentence-note').style.display = 'none';
+  }
+}
+
+// --- 交互事件绑定 ---
+$('sentence-view').onclick = () => {
+  const wrapper = $('sentence-back-wrapper');
+  const hint = $('sentence-hint');
+  if (wrapper.style.display === 'none') {
+    wrapper.style.display = 'block';
+    hint.style.display = 'none';
+  }
+};
+
+$('play-sentence-back').onclick = (e) => {
+  e.stopPropagation();
+  if (pool.length) speakEnglish(pool[currentIdx].back);
+};
+
+$('btn-prev').onclick = () => {
+  if (!pool.length) return;
+  currentIdx = (currentIdx - 1 + pool.length) % pool.length;
+  renderCard();
+};
+$('btn-next').onclick = () => {
+  if (!pool.length) return;
+  currentIdx = (currentIdx + 1) % pool.length;
+  renderCard();
+};
+
+// 学习反馈
+$('btn-know').onclick = () => {
+  if (!pool.length) return;
+  const id = pool[currentIdx].id;
+  if (!state.known.includes(id)) {
+    state.known.push(id);
+    state.wrong = state.wrong.filter(x => x !== id); 
+    saveState();
+    
+    if ($('status-select').value === 'wrong') {
+      buildPool();
+      return; 
+    }
+  }
+  $('btn-next').click();
+  renderCard(); 
+};
+
+$('btn-again').onclick = () => {
+  if (!pool.length) return;
+  const id = pool[currentIdx].id;
+  if (!state.wrong.includes(id)) {
+    state.wrong.push(id);
+    state.known = state.known.filter(x => x !== id); 
+    saveState();
+    
+    if ($('status-select').value === 'known') {
+      buildPool();
+      return;
+    }
+  }
+  $('btn-next').click();
+  renderCard(); 
+};
+
+// 搜索与筛选监听
+$('search').oninput = buildPool;
+$('type-select').onchange = buildPool;
+$('status-select').onchange = buildPool;
+
+// 键盘快捷键 (Plan B：统一控制展开)
+document.onkeydown = (e) => {
+  if (e.key === "ArrowRight") $('btn-next').click();
+  else if (e.key === "ArrowLeft") $('btn-prev').click();
+  else if (e.key === " ") {
+    e.preventDefault();
+    if (pool.length) {
+      // 统一触发上下展开的点击事件
+      $('sentence-view').click();
+    }
+  }
+};
+
+// --- 初始加载 ---
+fetch("cards.json?t=" + new Date().getTime())
+  .then(res => res.json())
+  .then(data => {
+    allData = data;
+    buildPool();
+  })
+  .catch(err => {
+    $('sentence-front').textContent = "加载语料失败，请确认 cards.json 文件存在。";
+    $('sentence-view').style.display = 'block';
+  });
+</script>
+</body>
+</html>
