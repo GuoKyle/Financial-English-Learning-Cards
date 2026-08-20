@@ -15,7 +15,7 @@
     "tag": "术语",
     "front": "国家服务业扩大开放综合示范区",
     "back": "National Integrated Demonstration Zone for Greater Openness in the Service Sector",
-    "note": "“两区”建设的重要组成部分"
+    "note": "“两区”建设的重要组成部分，国家服务业扩大开放综合示范区"
   },
   {
     "id": 3,
@@ -24,7 +24,7 @@
     "tag": "术语",
     "front": "中国（北京）自由贸易试验区",
     "back": "China (Beijing) Pilot Free Trade Zone",
-    "note": "“两区”建设的重要组成部分"
+    "note": "“两区”建设的重要组成部分，中国（北京）自由贸易试验区"
   },
   {
     "id": 4,
@@ -60,7 +60,7 @@
     "tag": "术语｜五篇大文章",
     "front": "科技金融、绿色金融、普惠金融、养老金融、数字金融",
     "back": "technology finance, green finance, inclusive finance, pension finance, and digital finance",
-    "note": "中央金融工作会议提出的“五篇大文章”，大部分是直译名字，inclusive的意思是“including a wide range of people, things, ideas, etc. 包容广阔的；范围广泛的”，用于翻译“普惠”。"
+    "note": "中央金融工作会议提出的“五篇大文章”，大部分是直译名字：科技、绿色、普惠、养老、数字；inclusive的意思是“including a wide range of people, things, ideas, etc. 包容广阔的；范围广泛的”，用于翻译“普惠”。"
   },
   {
     "id": 8,
@@ -69,7 +69,7 @@
     "tag": "术语｜核心搭配",
     "front": "标准体系和基础制度",
     "back": "standards and foundational institutions",
-    "note": "【避坑提示】这里的 institution 指的是“制度”，而不是“机构”。“基础制度”常译为 foundational institutions 或 basic institutions。"
+    "note": "标准体系和基础制度；【避坑提示】这里的 institution 指的是“制度”，而不是“机构”。“基础制度”常译为 foundational institutions 或 basic institutions。"
   },
   {
     "id": 9,
@@ -87,7 +87,7 @@
     "tag": "机制术语",
     "front": "服务包",
     "back": "Service Packages",
-    "note": "北京市优化营商环境、支持企业发展的一项定制化工作制度。"
+    "note": "服务包：北京市优化营商环境、支持企业发展的一项定制化工作制度。"
   },
   {
     "id": 11,
