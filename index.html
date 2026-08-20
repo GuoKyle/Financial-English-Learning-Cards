@@ -397,19 +397,29 @@ function saveState() {
   localStorage.setItem("bilingual-minimal-state", JSON.stringify(state));
 }
 
-// --- 纯英文语音朗读 ---
+  // --- 纯英文语音朗读 (兼容微信版) ---
 function speakEnglish(text) {
-  if (!window.speechSynthesis) {
-    alert("当前浏览器不支持发音功能。");
-    return;
-  }
-  window.speechSynthesis.cancel(); 
-  const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = 'en-US'; 
-  msg.rate = 0.9;     
-  window.speechSynthesis.speak(msg);
+  // 1. 使用有道词典的免费发音接口（type=2 为美音，type=1 为英音）
+  const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
+  const audio = new Audio(url);
+  
+  // 2. 尝试播放
+  audio.play().catch(err => {
+    console.warn("在线语音播放失败，尝试使用系统自带语音...", err);
+    
+    // 3. 降级方案：如果在线接口失效（比如没网），退回使用系统自带 TTS
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel(); 
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US'; 
+      msg.rate = 0.9;     
+      window.speechSynthesis.speak(msg);
+    } else {
+      alert("当前微信环境不支持发音，请点击右上角“在浏览器打开”进行学习。");
+    }
+  });
 }
-
+  
 // --- 渲染期数 Tabs ---
 function renderTabs() {
   const issues = [...new Set(allData.map(x => x.issue))].sort();
