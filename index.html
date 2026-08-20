@@ -132,16 +132,19 @@ main {
   font-weight: 600;
   margin-bottom: 20px;
 }
-  .note-box {
+
+/* --- 提示框优化 (手机/电脑更清晰) --- */
+.note-box {
   background: #f9f9fb;
   border-left: 3px solid #d2d2d7;
-  padding: 14px 18px; /* 增加了四周的留白 */
+  padding: 14px 18px; 
   border-radius: 0 8px 8px 0;
-  font-size: 15.5px; /* 字体从原本的 13px 调大 */
-  color: #2c2c2e; /* 加深了字体颜色，提高手机屏幕上的对比度 */
+  font-size: 15.5px; 
+  color: #2c2c2e; 
   margin-top: 24px;
   line-height: 1.75;
 }
+
 .hint-text {
   margin-top: auto;
   padding-top: 30px;
@@ -279,6 +282,7 @@ main {
 .fb-btn.again { color: #d95000; }
 .stats-text { font-size: 12px; color: var(--text-secondary); }
 
+/* --- 手机端专项适配 --- */
 @media(max-width: 600px) {
   .term-face, .sentence-container { padding: 30px 24px; }
   .term-text { font-size: 24px; }
@@ -308,6 +312,12 @@ main {
       <option value="all">全部类型</option>
       <option value="term">仅术语</option>
       <option value="sentence">仅句子</option>
+    </select>
+    <!-- 状态筛选下拉菜单 -->
+    <select class="type-select" id="status-select">
+      <option value="all">所有状态</option>
+      <option value="wrong">🤔 需重练</option>
+      <option value="known">✓ 已掌握</option>
     </select>
   </div>
 </div>
@@ -365,7 +375,7 @@ main {
   
   <div class="feedback-controls">
     <button class="fb-btn again" id="btn-again">🤔 需重练</button>
-    <div class="stats-text">已掌握: <span id="stat-known">0</span></div>
+    <div class="stats-text">卡组进度: <span id="stat-known">0</span></div>
     <button class="fb-btn know" id="btn-know">✓ 已掌握</button>
   </div>
 </div>
@@ -376,6 +386,9 @@ let pool = [];
 let currentIdx = 0;
 let currentIssue = "01";
 let state = JSON.parse(localStorage.getItem("bilingual-minimal-state") || '{"known":[],"wrong":[]}');
+
+// --- 强制清洗旧数据：如果已经在“重练”里，就从“已掌握”剔除 ---
+state.known = state.known.filter(id => !state.wrong.includes(id));
 
 const $ = id => document.getElementById(id);
 
@@ -390,10 +403,10 @@ function speakEnglish(text) {
     alert("当前浏览器不支持发音功能。");
     return;
   }
-  window.speechSynthesis.cancel(); // 打断之前的发音
+  window.speechSynthesis.cancel(); 
   const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = 'en-US'; // 强制使用美音
-  msg.rate = 0.9;     // 稍微降速，适合听力
+  msg.lang = 'en-US'; 
+  msg.rate = 0.9;     
   window.speechSynthesis.speak(msg);
 }
 
@@ -415,30 +428,37 @@ function renderTabs() {
   });
 }
 
-// --- 构建当前卡片池 (筛选+搜索) ---
+// --- 构建当前卡片池 (加入状态筛选逻辑) ---
 function buildPool() {
   const query = $('search').value.trim().toLowerCase();
   const typeFilter = $('type-select').value;
+  const statusFilter = $('status-select').value; // 获取新加的状态筛选
   
   pool = allData.filter(card => {
     const matchIssue = card.issue === currentIssue;
     const matchType = typeFilter === 'all' || card.type === typeFilter;
     const matchSearch = !query || (card.front + " " + card.back + " " + card.tag).toLowerCase().includes(query);
-    return matchIssue && matchType && matchSearch;
+    
+    // 检查状态
+    let matchStatus = true;
+    if (statusFilter === 'known') matchStatus = state.known.includes(card.id);
+    if (statusFilter === 'wrong') matchStatus = state.wrong.includes(card.id);
+    
+    return matchIssue && matchType && matchSearch && matchStatus;
   });
   
   currentIdx = 0;
-  renderTabs(); // 更新 Tab 高亮
+  renderTabs(); 
   renderCard();
 }
 
 // --- 渲染卡片内容 ---
 function renderCard() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel(); // 切卡片时停止发音
+  if (window.speechSynthesis) window.speechSynthesis.cancel(); 
   
   // 更新统计数据
   const knownCount = pool.filter(x => state.known.includes(x.id)).length;
-  $('stat-known').textContent = `${knownCount} / ${pool.length}`;
+  $('stat-known').textContent = `${knownCount} / ${pool.length} (已掌握)`;
 
   if (!pool.length) {
     $('counter').textContent = `0 / 0`;
@@ -492,8 +512,6 @@ function renderCard() {
 }
 
 // --- 交互事件绑定 ---
-
-// 卡片翻转/展开
 $('term-view').onclick = () => $('term-inner').classList.toggle('flip');
 $('sentence-view').onclick = () => {
   const wrapper = $('sentence-back-wrapper');
@@ -504,7 +522,6 @@ $('sentence-view').onclick = () => {
   }
 };
 
-// 朗读按钮 (阻止事件冒泡，防止点击喇叭时翻转卡片)
 $('play-term-back').onclick = (e) => {
   e.stopPropagation();
   if (pool.length) speakEnglish(pool[currentIdx].back);
@@ -514,7 +531,6 @@ $('play-sentence-back').onclick = (e) => {
   if (pool.length) speakEnglish(pool[currentIdx].back);
 };
 
-// 导航
 $('btn-prev').onclick = () => {
   if (!pool.length) return;
   currentIdx = (currentIdx - 1 + pool.length) % pool.length;
@@ -526,7 +542,7 @@ $('btn-next').onclick = () => {
   renderCard();
 };
 
-// 学习反馈
+// 学习反馈 (确保状态不矛盾)
 $('btn-know').onclick = () => {
   if (!pool.length) return;
   const id = pool[currentIdx].id;
@@ -534,9 +550,17 @@ $('btn-know').onclick = () => {
     state.known.push(id);
     state.wrong = state.wrong.filter(x => x !== id); // 从错题中移除
     saveState();
+    
+    // 如果当前处于“需重练”筛选模式，掌握后将当前卡片移出视图
+    if ($('status-select').value === 'wrong') {
+      buildPool();
+      return; 
+    }
   }
-  $('btn-next').click(); // 自动下一张
+  $('btn-next').click();
+  renderCard(); // 刷新统计数字
 };
+
 $('btn-again').onclick = () => {
   if (!pool.length) return;
   const id = pool[currentIdx].id;
@@ -544,13 +568,21 @@ $('btn-again').onclick = () => {
     state.wrong.push(id);
     state.known = state.known.filter(x => x !== id); // 从已掌握中移除
     saveState();
+    
+    // 如果当前处于“已掌握”筛选模式，标为重练后移出视图
+    if ($('status-select').value === 'known') {
+      buildPool();
+      return;
+    }
   }
-  $('btn-next').click(); // 自动下一张
+  $('btn-next').click();
+  renderCard(); // 刷新统计数字
 };
 
 // 搜索与筛选监听
 $('search').oninput = buildPool;
 $('type-select').onchange = buildPool;
+$('status-select').onchange = buildPool; // 绑定新加的状态筛选器
 
 // 键盘快捷键
 document.onkeydown = (e) => {
@@ -565,7 +597,7 @@ document.onkeydown = (e) => {
   }
 };
 
-// 初始加载
+// --- 初始加载 (带时间戳防止缓存) ---
 fetch("cards.json?t=" + new Date().getTime())
   .then(res => res.json())
   .then(data => {
