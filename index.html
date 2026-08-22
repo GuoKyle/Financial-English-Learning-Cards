@@ -19,7 +19,7 @@
   --shadow-md: 0 10px 30px rgba(0,0,0,0.06);
 }
 
-/* 锁定微信大字号缩放，防止排版错乱 */
+/* 锁定微信大字号缩放，防止手机排版错乱 */
 html, body {
   -webkit-text-size-adjust: 100% !important;
   text-size-adjust: 100% !important;
@@ -49,7 +49,7 @@ header {
 .title-area h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
 .title-area p { margin: 4px 0 0; font-size: 13px; color: var(--text-secondary); }
 
-/* 极简工具栏 */
+/* 工具栏响应式布局 (兼容电脑与手机) */
 .toolbar {
   max-width: 650px;
   margin: 10px auto 20px;
@@ -89,7 +89,7 @@ header {
 }
 .search-input {
   flex: 2;
-  min-width: 160px;
+  min-width: 180px;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 10px 14px;
@@ -127,8 +127,7 @@ main {
 .card-wrapper {
   width: 100%;
   max-width: 600px;
-  min-height: 420px;
-  cursor: pointer;
+  min-height: 400px;
   position: relative;
 }
 .tag {
@@ -155,7 +154,7 @@ main {
 
 .hint-text {
   margin-top: auto;
-  padding-top: 20px;
+  padding-top: 16px;
   text-align: center;
   font-size: 13px;
   color: var(--text-secondary);
@@ -205,12 +204,12 @@ main {
 
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
 
-/* --- Term Card (Flip) 防溢出修复 --- */
+/* --- Term Card (Flip) 电脑/手机双端高度锁定 --- */
 .term-container {
   perspective: 1400px;
   width: 100%;
-  height: 100%;
-  min-height: 420px;
+  height: 400px; /* 锁定固高，防止电脑端坍塌 */
+  cursor: pointer;
 }
 .term-inner {
   position: relative;
@@ -229,17 +228,36 @@ main {
   padding: 30px 24px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: stretch;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   overflow-y: auto;
 }
 .term-back { transform: rotateY(180deg); text-align: left; }
-.term-text { font-size: 26px; font-weight: 600; line-height: 1.4; color: var(--text-main); flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;}
-.term-back .term-text { font-size: 20px; font-weight: 500; align-items: flex-start; text-align: left; margin-top: 10px; flex: none;}
+.term-text { 
+  font-size: 26px; 
+  font-weight: 600; 
+  line-height: 1.4; 
+  color: var(--text-main); 
+  flex: 1; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  text-align: center;
+  padding: 10px 0;
+}
+.term-back .term-text { 
+  font-size: 20px; 
+  font-weight: 500; 
+  align-items: flex-start; 
+  justify-content: flex-start;
+  text-align: left; 
+  margin-top: 10px; 
+  flex: none;
+}
 
-/* --- Sentence Card (Expand) 防溢出修复 --- */
+/* --- Sentence Card (Expand) --- */
 .sentence-container {
   background: var(--card-bg);
   border-radius: 20px;
@@ -248,9 +266,10 @@ main {
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 420px;
+  min-height: 400px;
   max-height: 65vh;
   overflow-y: auto;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 .sentence-front {
@@ -425,7 +444,7 @@ let allData = [];
 let pool = [];
 let currentIdx = 0;
 let currentIssue = null;
-let currentRangeKey = null; // 当前选择的 10 期分组，例如 '51-60'
+let currentRangeKey = null;
 let currentSpeed = 'normal';
 let state = JSON.parse(localStorage.getItem("bilingual-minimal-state") || '{"known":[],"wrong":[]}');
 
@@ -478,12 +497,10 @@ document.querySelectorAll('.speed-toggle-btn').forEach(btn => {
   };
 });
   
-// --- 渲染分组范围与期数 Tabs ---
 function renderTabsAndRanges() {
   const allIssues = [...new Set(allData.map(x => parseInt(x.issue, 10)))].sort((a, b) => b - a);
   if (allIssues.length === 0) return;
 
-  // 将所有期数按 10 期划分组 (例如: 1-10, 11-20, 51-60)
   const rangeMap = {};
   allIssues.forEach(num => {
     const start = Math.floor((num - 1) / 10) * 10 + 1;
@@ -496,15 +513,13 @@ function renderTabsAndRanges() {
   const rangeKeys = Object.keys(rangeMap).sort((a, b) => {
     const startA = parseInt(a.split('-')[0], 10);
     const startB = parseInt(b.split('-')[0], 10);
-    return startB - startA; // 降序，最新范围排在前
+    return startB - startA;
   });
 
-  // 默认定位到最新的范围
   if (!currentRangeKey || !rangeMap[currentRangeKey]) {
     currentRangeKey = rangeKeys[0];
   }
 
-  // 填充范围下拉框
   const rangeSelect = $('range-select');
   rangeSelect.innerHTML = rangeKeys.map(key => {
     const [s, e] = key.split('-');
@@ -514,7 +529,6 @@ function renderTabsAndRanges() {
   rangeSelect.onchange = (e) => {
     currentRangeKey = e.target.value;
     const issuesInRange = rangeMap[currentRangeKey];
-    // 默认选择该分组内的最新一期
     const rawIssueNum = issuesInRange[0];
     currentIssue = allData.find(x => parseInt(x.issue, 10) === rawIssueNum)?.issue || String(rawIssueNum);
     buildPool();
@@ -527,7 +541,6 @@ function renderTabsAndRanges() {
     currentIssue = allData.find(x => parseInt(x.issue, 10) === rawIssueNum)?.issue || String(rawIssueNum);
   }
 
-  // 渲染当前范围内的期数按钮 Tabs
   $('issue-tabs').innerHTML = issuesInRange.map(num => {
     const rawIssueStr = allData.find(x => parseInt(x.issue, 10) === num)?.issue || String(num);
     const isActive = parseInt(rawIssueStr, 10) === parseInt(currentIssue, 10);
@@ -543,6 +556,8 @@ function renderTabsAndRanges() {
 }
 
 function buildPool() {
+  renderTabsAndRanges(); // 确保首先初始化和更新期数变量，解决 empty pool bug
+
   const query = $('search').value.trim().toLowerCase();
   const typeFilter = $('type-select').value;
   const statusFilter = $('status-select').value; 
@@ -560,7 +575,6 @@ function buildPool() {
   });
   
   currentIdx = 0;
-  renderTabsAndRanges(); 
   renderCard();
 }
 
