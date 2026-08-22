@@ -19,6 +19,12 @@
   --shadow-md: 0 10px 30px rgba(0,0,0,0.06);
 }
 
+/* 锁定微信大字号缩放，防止排版错乱 */
+html, body {
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -43,7 +49,7 @@ header {
 .title-area h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
 .title-area p { margin: 4px 0 0; font-size: 13px; color: var(--text-secondary); }
 
-/* 极简工具栏 (期数、搜索、筛选) */
+/* 极简工具栏 */
 .toolbar {
   max-width: 650px;
   margin: 10px auto 20px;
@@ -79,9 +85,11 @@ header {
 .search-row {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 .search-input {
-  flex: 1;
+  flex: 2;
+  min-width: 160px;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 10px 14px;
@@ -92,10 +100,12 @@ header {
 }
 .search-input:focus { border-color: var(--accent-blue); }
 .type-select {
+  flex: 1;
+  min-width: 110px;
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 14px;
+  padding: 10px 10px;
+  font-size: 13.5px;
   background: var(--card-bg);
   color: var(--text-main);
   outline: none;
@@ -114,11 +124,10 @@ main {
   width: 100%;
 }
 
-/* Common Card Styles */
 .card-wrapper {
   width: 100%;
   max-width: 600px;
-  min-height: 380px;
+  min-height: 420px;
   cursor: pointer;
   position: relative;
 }
@@ -130,35 +139,34 @@ main {
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .note-box {
   background: #f9f9fb;
   border-left: 3px solid #d2d2d7;
-  padding: 14px 18px; 
+  padding: 12px 16px; 
   border-radius: 0 8px 8px 0;
-  font-size: 15.5px; 
+  font-size: 15px; 
   color: #2c2c2e; 
-  margin-top: 24px;
-  line-height: 1.75;
+  margin-top: 16px;
+  line-height: 1.6;
 }
 
 .hint-text {
   margin-top: auto;
-  padding-top: 30px;
+  padding-top: 20px;
   text-align: center;
   font-size: 13px;
   color: var(--text-secondary);
 }
 
-/* 音频播放按钮 */
 .play-btn {
   background: none;
   border: none;
   font-size: 20px;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 6px 10px;
   color: var(--accent-blue);
   border-radius: 20px;
   display: inline-flex;
@@ -176,7 +184,6 @@ main {
   background-color: var(--accent-light);
 }
 
-/* 语速切换按钮样式 */
 .speed-btn {
   background: #e8e8ed;
   border: none;
@@ -198,12 +205,12 @@ main {
 
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
 
-/* --- Term Card (Flip) --- */
+/* --- Term Card (Flip) 防溢出修复 --- */
 .term-container {
   perspective: 1400px;
   width: 100%;
   height: 100%;
-  min-height: 380px;
+  min-height: 420px;
 }
 .term-inner {
   position: relative;
@@ -219,46 +226,48 @@ main {
   background: var(--card-bg);
   border-radius: 20px;
   box-shadow: var(--shadow-md);
-  padding: 40px;
+  padding: 30px 24px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  justify-content: flex-start;
+  align-items: stretch;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  overflow-y: auto;
 }
-.term-back { transform: rotateY(180deg); align-items: stretch; text-align: left; justify-content: flex-start; }
-.term-text { font-size: 28px; font-weight: 600; line-height: 1.4; color: var(--text-main); flex: 1; display: flex; align-items: center; justify-content: center;}
-.term-back .term-text { font-size: 22px; font-weight: 500; align-items: flex-start; margin-top: 10px;}
+.term-back { transform: rotateY(180deg); text-align: left; }
+.term-text { font-size: 26px; font-weight: 600; line-height: 1.4; color: var(--text-main); flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;}
+.term-back .term-text { font-size: 20px; font-weight: 500; align-items: flex-start; text-align: left; margin-top: 10px; flex: none;}
 
-/* --- Sentence Card (Expand) --- */
+/* --- Sentence Card (Expand) 防溢出修复 --- */
 .sentence-container {
   background: var(--card-bg);
   border-radius: 20px;
   box-shadow: var(--shadow-md);
-  padding: 40px;
+  padding: 30px 24px;
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 380px;
+  min-height: 420px;
+  max-height: 65vh;
+  overflow-y: auto;
   transition: all 0.3s ease;
 }
 .sentence-front {
-  font-size: 20px;
-  line-height: 1.8;
+  font-size: 19px;
+  line-height: 1.7;
   font-weight: 500;
   color: var(--text-main);
 }
 .sentence-divider {
   height: 1px;
   background: var(--border-color);
-  margin: 24px 0;
+  margin: 18px 0;
   opacity: 0.5;
 }
 .sentence-back-text {
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 1.6;
   color: #333336;
 }
 
@@ -310,15 +319,15 @@ main {
 .fb-btn.again { color: #d95000; }
 .stats-text { font-size: 12px; color: var(--text-secondary); }
 
-/* --- 手机端专项适配 --- */
 @media(max-width: 600px) {
-  .term-face, .sentence-container { padding: 30px 24px; }
-  .term-text { font-size: 24px; }
-  .term-back .term-text { font-size: 20px; }
-  .sentence-front { font-size: 18px; }
+  .term-face, .sentence-container { padding: 24px 18px; }
+  .term-text { font-size: 22px; }
+  .term-back .term-text { font-size: 18px; }
+  .sentence-front { font-size: 17.5px; }
   .sentence-back-text { font-size: 16px; }
   .search-row { flex-direction: column; }
-  .note-box { font-size: 16.5px; padding: 16px; line-height: 1.8; }
+  .type-select { width: 100%; }
+  .note-box { font-size: 14.5px; padding: 12px 14px; }
 }
 </style>
 </head>
@@ -332,11 +341,11 @@ main {
   <a href="index_planB.html" style="font-size:13px; color:var(--accent-blue); text-decoration:none; background:var(--accent-light); padding:6px 12px; border-radius:14px; font-weight:500;">📖 沉浸模式</a>
 </header>
 
-<!-- 工具栏 -->
 <div class="toolbar">
   <div class="issue-tabs" id="issue-tabs"></div>
   <div class="search-row">
     <input type="text" class="search-input" id="search" placeholder="搜索中英文或标签...">
+    <select class="type-select" id="range-select" title="选择期数范围"></select>
     <select class="type-select" id="type-select">
       <option value="all">全部类型</option>
       <option value="term">仅术语</option>
@@ -353,7 +362,6 @@ main {
 <main>
   <div class="card-wrapper" id="card-area">
     
-    <!-- 术语卡片：翻转 -->
     <div class="term-container" id="term-view" style="display: none;">
       <div class="term-inner" id="term-inner">
         <div class="term-face">
@@ -375,7 +383,6 @@ main {
       </div>
     </div>
 
-    <!-- 句子卡片：上下展开 -->
     <div class="sentence-container" id="sentence-view" style="display: none;">
       <div class="tag" id="sentence-tag"></div>
       <div class="sentence-front" id="sentence-front"></div>
@@ -399,7 +406,6 @@ main {
   </div>
 </main>
 
-<!-- 底部控制与进度区 -->
 <div class="bottom-area">
   <div class="nav-controls">
     <button class="btn" id="btn-prev">← 上一页</button>
@@ -418,31 +424,27 @@ main {
 let allData = [];
 let pool = [];
 let currentIdx = 0;
-let currentIssue = "01";
-let currentSpeed = 'normal'; // 音频语速状态 ('normal' 或 'slow')
+let currentIssue = null;
+let currentRangeKey = null; // 当前选择的 10 期分组，例如 '51-60'
+let currentSpeed = 'normal';
 let state = JSON.parse(localStorage.getItem("bilingual-minimal-state") || '{"known":[],"wrong":[]}');
 
-// --- 强制清洗旧数据 ---
 state.known = state.known.filter(id => !state.wrong.includes(id));
 
 const $ = id => document.getElementById(id);
 
-// --- 本地进度存储 ---
 function saveState() {
   localStorage.setItem("bilingual-minimal-state", JSON.stringify(state));
 }
 
-// --- 全局 Audio 单例 (移动端必选) ---
 const globalAudio = new Audio();
 
-// 预解锁微信 iOS 内置浏览器音频限制
 if (typeof WeixinJSBridge === 'object' && typeof WeixinJSBridge.invoke === 'function') {
   WeixinJSBridge.invoke('getNetworkType', {}, function () { globalAudio.load(); }, false);
 } else {
   document.addEventListener("WeixinJSBridgeReady", function () { globalAudio.load(); }, false);
 }
 
-// --- 播放按期数分类的双语速静态 MP3 文件 ---
 function playCardAudio(card) {
   if (!card) return;
   globalAudio.pause();
@@ -453,7 +455,6 @@ function playCardAudio(card) {
   });
 }
 
-// --- 语速切换按钮全局更新 ---
 function updateSpeedBtns() {
   document.querySelectorAll('.speed-toggle-btn').forEach(btn => {
     if (currentSpeed === 'normal') {
@@ -477,16 +478,62 @@ document.querySelectorAll('.speed-toggle-btn').forEach(btn => {
   };
 });
   
-// --- 渲染期数 Tabs ---
-function renderTabs() {
-  const issues = [...new Set(allData.map(x => x.issue))].sort();
-  if (issues.length === 0) return;
-  if (!issues.includes(currentIssue)) currentIssue = issues[0];
-  
-  $('issue-tabs').innerHTML = issues.map(iss => 
-    `<button class="tab-btn ${iss === currentIssue ? 'active' : ''}" data-iss="${iss}">第 ${iss} 期</button>`
-  ).join('');
-  
+// --- 渲染分组范围与期数 Tabs ---
+function renderTabsAndRanges() {
+  const allIssues = [...new Set(allData.map(x => parseInt(x.issue, 10)))].sort((a, b) => b - a);
+  if (allIssues.length === 0) return;
+
+  // 将所有期数按 10 期划分组 (例如: 1-10, 11-20, 51-60)
+  const rangeMap = {};
+  allIssues.forEach(num => {
+    const start = Math.floor((num - 1) / 10) * 10 + 1;
+    const end = start + 9;
+    const key = `${start}-${end}`;
+    if (!rangeMap[key]) rangeMap[key] = [];
+    rangeMap[key].push(num);
+  });
+
+  const rangeKeys = Object.keys(rangeMap).sort((a, b) => {
+    const startA = parseInt(a.split('-')[0], 10);
+    const startB = parseInt(b.split('-')[0], 10);
+    return startB - startA; // 降序，最新范围排在前
+  });
+
+  // 默认定位到最新的范围
+  if (!currentRangeKey || !rangeMap[currentRangeKey]) {
+    currentRangeKey = rangeKeys[0];
+  }
+
+  // 填充范围下拉框
+  const rangeSelect = $('range-select');
+  rangeSelect.innerHTML = rangeKeys.map(key => {
+    const [s, e] = key.split('-');
+    return `<option value="${key}" ${key === currentRangeKey ? 'selected' : ''}>第 ${s}-${e} 期</option>`;
+  }).join('');
+
+  rangeSelect.onchange = (e) => {
+    currentRangeKey = e.target.value;
+    const issuesInRange = rangeMap[currentRangeKey];
+    // 默认选择该分组内的最新一期
+    const rawIssueNum = issuesInRange[0];
+    currentIssue = allData.find(x => parseInt(x.issue, 10) === rawIssueNum)?.issue || String(rawIssueNum);
+    buildPool();
+  };
+
+  const issuesInRange = rangeMap[currentRangeKey];
+
+  if (!currentIssue || !issuesInRange.includes(parseInt(currentIssue, 10))) {
+    const rawIssueNum = issuesInRange[0];
+    currentIssue = allData.find(x => parseInt(x.issue, 10) === rawIssueNum)?.issue || String(rawIssueNum);
+  }
+
+  // 渲染当前范围内的期数按钮 Tabs
+  $('issue-tabs').innerHTML = issuesInRange.map(num => {
+    const rawIssueStr = allData.find(x => parseInt(x.issue, 10) === num)?.issue || String(num);
+    const isActive = parseInt(rawIssueStr, 10) === parseInt(currentIssue, 10);
+    return `<button class="tab-btn ${isActive ? 'active' : ''}" data-iss="${rawIssueStr}">第 ${num} 期</button>`;
+  }).join('');
+
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.onclick = () => {
       currentIssue = btn.getAttribute('data-iss');
@@ -495,14 +542,13 @@ function renderTabs() {
   });
 }
 
-// --- 构建当前卡片池 ---
 function buildPool() {
   const query = $('search').value.trim().toLowerCase();
   const typeFilter = $('type-select').value;
   const statusFilter = $('status-select').value; 
   
   pool = allData.filter(card => {
-    const matchIssue = card.issue === currentIssue;
+    const matchIssue = parseInt(card.issue, 10) === parseInt(currentIssue, 10);
     const matchType = typeFilter === 'all' || card.type === typeFilter;
     const matchSearch = !query || (card.front + " " + card.back + " " + card.tag).toLowerCase().includes(query);
     
@@ -514,11 +560,10 @@ function buildPool() {
   });
   
   currentIdx = 0;
-  renderTabs(); 
+  renderTabsAndRanges(); 
   renderCard();
 }
 
-// --- 渲染卡片内容 ---
 function renderCard() {
   globalAudio.pause(); 
   
@@ -574,7 +619,6 @@ function renderCard() {
   }
 }
 
-// --- 交互事件绑定 ---
 $('term-view').onclick = () => $('term-inner').classList.toggle('flip');
 $('sentence-view').onclick = () => {
   const wrapper = $('sentence-back-wrapper');
@@ -607,7 +651,6 @@ $('btn-next').onclick = () => {
   renderCard();
 };
 
-// 学习反馈
 $('btn-know').onclick = () => {
   if (!pool.length) return;
   const id = pool[currentIdx].id;
@@ -642,12 +685,10 @@ $('btn-again').onclick = () => {
   renderCard();
 };
 
-// 搜索与筛选监听
 $('search').oninput = buildPool;
 $('type-select').onchange = buildPool;
 $('status-select').onchange = buildPool; 
 
-// 键盘快捷键
 document.onkeydown = (e) => {
   if (e.key === "ArrowRight") $('btn-next').click();
   else if (e.key === "ArrowLeft") $('btn-prev').click();
@@ -660,7 +701,6 @@ document.onkeydown = (e) => {
   }
 };
 
-// --- 初始加载 ---
 fetch("cards.json?t=" + new Date().getTime())
   .then(res => res.json())
   .then(data => {
