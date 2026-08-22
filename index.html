@@ -153,32 +153,29 @@ main {
   color: var(--text-secondary);
 }
 
-/* 音频按钮 */
+/* 音频按钮优化：扩大触控热区，适应手机端微信 */
 .play-btn {
-  appearance: none;
-  -webkit-appearance: none;
-  background: var(--accent-light);
-  border: 0;
+  background: none;
+  border: none;
   font-size: 20px;
   cursor: pointer;
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  padding: 0;
+  padding: 8px 12px;
   color: var(--accent-blue);
-  border-radius: 50%;
+  border-radius: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s, opacity 0.2s;
-  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s, background-color 0.2s;
+  min-width: 44px;
+  min-height: 44px;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
-  -webkit-user-select: none;
 }
-.play-btn:active { transform: scale(0.92); }
-.play-btn.playing { opacity: 0.65; }
-.play-btn:disabled { opacity: 0.45; cursor: default; }
+.play-btn:active {
+  transform: scale(0.92);
+  background-color: var(--accent-light);
+}
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
 
 /* --- Term Card (Flip) --- */
@@ -315,7 +312,6 @@ main {
     <a href="index_planB.html" style="font-size:13px; color:var(--accent-blue); text-decoration:none; background:var(--accent-light); padding:6px 12px; border-radius:14px; font-weight:500;">📖 沉浸模式</a>
 </header>
 
-<!-- 工具栏 -->
 <div class="toolbar">
   <div class="issue-tabs" id="issue-tabs"></div>
   <div class="search-row">
@@ -325,7 +321,6 @@ main {
       <option value="term">仅术语</option>
       <option value="sentence">仅句子</option>
     </select>
-    <!-- 状态筛选下拉菜单 -->
     <select class="type-select" id="status-select">
       <option value="all">所有状态</option>
       <option value="wrong">🤔 需重练</option>
@@ -337,7 +332,6 @@ main {
 <main>
   <div class="card-wrapper" id="card-area">
     
-    <!-- 术语卡片：翻转 -->
     <div class="term-container" id="term-view" style="display: none;">
       <div class="term-inner" id="term-inner">
         <div class="term-face">
@@ -348,7 +342,7 @@ main {
         <div class="term-face term-back">
           <div class="header-row">
             <div class="tag">参考译文</div>
-            <button class="play-btn" id="play-term-back" type="button" title="朗读英文" aria-label="朗读英文">🔊</button>
+            <button class="play-btn" id="play-term-back" title="朗读英文">🔊</button>
           </div>
           <div class="term-text" id="term-back"></div>
           <div class="note-box" id="term-note"></div>
@@ -356,7 +350,6 @@ main {
       </div>
     </div>
 
-    <!-- 句子卡片：上下展开 -->
     <div class="sentence-container" id="sentence-view" style="display: none;">
       <div class="tag" id="sentence-tag"></div>
       <div class="sentence-front" id="sentence-front"></div>
@@ -365,7 +358,7 @@ main {
         <div class="sentence-divider"></div>
         <div class="header-row" style="margin-bottom: 12px;">
           <div style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">REFERENCE</div>
-          <button class="play-btn" id="play-sentence-back" type="button" title="朗读英文" aria-label="朗读英文">🔊</button>
+          <button class="play-btn" id="play-sentence-back" title="朗读英文">🔊</button>
         </div>
         <div class="sentence-back-text" id="sentence-back"></div>
         <div class="note-box" id="sentence-note"></div>
@@ -377,7 +370,6 @@ main {
   </div>
 </main>
 
-<!-- 底部控制与进度区 -->
 <div class="bottom-area">
   <div class="nav-controls">
     <button class="btn" id="btn-prev">← 上一页</button>
@@ -399,108 +391,55 @@ let currentIdx = 0;
 let currentIssue = "01";
 let state = JSON.parse(localStorage.getItem("bilingual-minimal-state") || '{"known":[],"wrong":[]}');
 
-// --- 英文语音朗读（针对微信 / iOS / Android 手机端优化） ---
-let currentAudio = null;
-let currentPlayButton = null;
+// --- 强制清洗旧数据：如果已经在“重练”里，就从“已掌握”剔除 ---
+state.known = state.known.filter(id => !state.wrong.includes(id));
 
-function setPlayButtonState(button, playing) {
-  if (!button) return;
-  button.classList.toggle('playing', playing);
-  button.setAttribute('aria-label', playing ? '正在朗读' : '朗读英文');
+const $ = id => document.getElementById(id);
+
+// --- 本地进度存储 ---
+function saveState() {
+  localStorage.setItem("bilingual-minimal-state", JSON.stringify(state));
 }
 
-function stopCurrentAudio() {
-  if (currentAudio) {
-    try {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-    } catch (_) {}
-  }
-  setPlayButtonState(currentPlayButton, false);
-  currentAudio = null;
-  currentPlayButton = null;
+// --- 全局单例 Audio 对象，防止移动端 iOS / 微信拦截新实例 ---
+const globalAudio = new Audio();
+
+// 预解锁微信 iOS 内置浏览器的音频自动播放限制
+if (typeof WeixinJSBridge === 'object' && typeof WeixinJSBridge.invoke === 'function') {
+  WeixinJSBridge.invoke('getNetworkType', {}, function () {
+    globalAudio.load();
+  }, false);
+} else {
+  document.addEventListener("WeixinJSBridgeReady", function () {
+    globalAudio.load();
+  }, false);
 }
 
-function fallbackSpeak(text) {
-  if (!('speechSynthesis' in window)) {
-    alert('当前微信环境暂不支持语音播放，请尝试使用系统浏览器打开。');
-    return;
-  }
-
-  try {
-    window.speechSynthesis.cancel();
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = 'en-US';
-    msg.rate = 0.9;
-    msg.pitch = 1;
-    msg.volume = 1;
-    window.speechSynthesis.speak(msg);
-  } catch (err) {
-    console.warn('系统语音播放失败：', err);
-    alert('语音播放失败，请检查网络连接后重试。');
-  }
-}
-
-function speakEnglish(text, button = null) {
+// --- 英文语音朗读核心逻辑 ---
+function speakEnglish(text) {
   if (!text) return;
 
-  // 连续点击或切换卡片时，先停止上一段声音，避免重叠播放。
-  stopCurrentAudio();
-  if ('speechSynthesis' in window) {
-    try { window.speechSynthesis.cancel(); } catch (_) {}
-  }
-
-  // 有道发音接口：type=2 为美音。
+  globalAudio.pause();
   const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
-  const audio = new Audio();
-  audio.preload = 'auto';
-  audio.src = url;
-  audio.setAttribute('playsinline', '');
-  audio.setAttribute('webkit-playsinline', '');
+  globalAudio.src = url;
 
-  currentAudio = audio;
-  currentPlayButton = button;
-  setPlayButtonState(button, true);
-
-  audio.onended = () => {
-    if (currentAudio === audio) {
-      setPlayButtonState(currentPlayButton, false);
-      currentAudio = null;
-      currentPlayButton = null;
-    }
-  };
-
-  audio.onerror = () => {
-    if (currentAudio === audio) {
-      setPlayButtonState(button, false);
-      currentAudio = null;
-      currentPlayButton = null;
-    }
-    fallbackSpeak(text);
-  };
-
-  // 明确走 HTML5 Audio 播放链路，适配微信内置浏览器。
-  try { audio.load(); } catch (_) {}
-
-  const playPromise = audio.play();
-  if (playPromise && typeof playPromise.catch === 'function') {
+  const playPromise = globalAudio.play();
+  if (playPromise !== undefined) {
     playPromise.catch(err => {
-      console.warn('HTML5 Audio 播放失败：', err);
-      if (currentAudio === audio) {
-        setPlayButtonState(button, false);
-        currentAudio = null;
-        currentPlayButton = null;
+      console.warn("在线语音播放受阻，尝试系统语音...", err);
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel(); 
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'en-US'; 
+        msg.rate = 0.9;     
+        window.speechSynthesis.speak(msg);
+      } else {
+        alert("当前微信环境限制了音频播放，请点击右上角“在默认浏览器中打开”。");
       }
-      // 这是用户主动点击喇叭后的降级方案。
-      fallbackSpeak(text);
     });
   }
 }
-
-// 页面进入后台时停止当前发音，避免微信切页后继续播放。
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) stopCurrentAudio();
-});
+  
 // --- 渲染期数 Tabs ---
 function renderTabs() {
   const issues = [...new Set(allData.map(x => x.issue))].sort();
@@ -523,7 +462,7 @@ function renderTabs() {
 function buildPool() {
   const query = $('search').value.trim().toLowerCase();
   const typeFilter = $('type-select').value;
-  const statusFilter = $('status-select').value; // 获取新加的状态筛选
+  const statusFilter = $('status-select').value; 
   
   pool = allData.filter(card => {
     const matchIssue = card.issue === currentIssue;
@@ -614,12 +553,14 @@ $('sentence-view').onclick = () => {
 };
 
 $('play-term-back').onclick = (e) => {
+  e.preventDefault();
   e.stopPropagation();
-  if (pool.length) speakEnglish(pool[currentIdx].back, e.currentTarget);
+  if (pool.length) speakEnglish(pool[currentIdx].back);
 };
 $('play-sentence-back').onclick = (e) => {
+  e.preventDefault();
   e.stopPropagation();
-  if (pool.length) speakEnglish(pool[currentIdx].back, e.currentTarget);
+  if (pool.length) speakEnglish(pool[currentIdx].back);
 };
 
 $('btn-prev').onclick = () => {
@@ -673,7 +614,7 @@ $('btn-again').onclick = () => {
 // 搜索与筛选监听
 $('search').oninput = buildPool;
 $('type-select').onchange = buildPool;
-$('status-select').onchange = buildPool; // 绑定新加的状态筛选器
+$('status-select').onchange = buildPool; 
 
 // 键盘快捷键
 document.onkeydown = (e) => {
