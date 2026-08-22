@@ -152,7 +152,7 @@ main {
   color: var(--text-secondary);
 }
 
-/* 音频按钮优化：扩大触控热区，适应手机端微信 */
+/* 音频按钮：扩大触摸热区并消除移动端点击延迟 */
 .play-btn {
   background: none;
   border: none;
@@ -275,6 +275,7 @@ main {
   <a href="index.html" style="font-size:13px; color:var(--accent-blue); text-decoration:none; background:var(--accent-light); padding:6px 12px; border-radius:14px; font-weight:500; transition:opacity 0.2s;">🔄 翻转模式</a>
 </header>
 
+<!-- 工具栏 -->
 <div class="toolbar">
   <div class="issue-tabs" id="issue-tabs"></div>
   <div class="search-row">
@@ -295,6 +296,7 @@ main {
 <main>
   <div class="card-wrapper" id="card-area">
     
+    <!-- 统一使用的句子卡片：上下展开 -->
     <div class="sentence-container" id="sentence-view" style="display: none;">
       <div class="tag" id="sentence-tag"></div>
       <div class="sentence-front" id="sentence-front"></div>
@@ -315,6 +317,7 @@ main {
   </div>
 </main>
 
+<!-- 底部控制与进度区 -->
 <div class="bottom-area">
   <div class="nav-controls">
     <button class="btn" id="btn-prev">← 上一页</button>
@@ -346,43 +349,24 @@ function saveState() {
   localStorage.setItem("bilingual-minimal-state", JSON.stringify(state));
 }
 
-// --- 全局单例 Audio 对象，防止移动端 iOS / 微信拦截新实例 ---
+// --- 全局 Audio 单例 (移动端必选) ---
 const globalAudio = new Audio();
 
-// 预解锁微信 iOS 内置浏览器的音频自动播放限制
+// 预解锁微信 iOS 内置浏览器音频限制
 if (typeof WeixinJSBridge === 'object' && typeof WeixinJSBridge.invoke === 'function') {
-  WeixinJSBridge.invoke('getNetworkType', {}, function () {
-    globalAudio.load();
-  }, false);
+  WeixinJSBridge.invoke('getNetworkType', {}, function () { globalAudio.load(); }, false);
 } else {
-  document.addEventListener("WeixinJSBridgeReady", function () {
-    globalAudio.load();
-  }, false);
+  document.addEventListener("WeixinJSBridgeReady", function () { globalAudio.load(); }, false);
 }
 
-// --- 英文语音朗读核心逻辑 ---
-function speakEnglish(text) {
-  if (!text) return;
-
+// --- 播放预生成的本地 MP3 文件 ---
+function playCardAudio(id) {
+  if (!id) return;
   globalAudio.pause();
-  const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
-  globalAudio.src = url;
-
-  const playPromise = globalAudio.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(err => {
-      console.warn("在线语音播放受阻，尝试系统语音...", err);
-      if (window.speechSynthesis) {
-        window.speechSynthesis.cancel(); 
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'en-US'; 
-        msg.rate = 0.9;     
-        window.speechSynthesis.speak(msg);
-      } else {
-        alert("当前微信环境限制了音频播放，请点击右上角“在默认浏览器中打开”。");
-      }
-    });
-  }
+  globalAudio.src = `audio/${id}.mp3`;
+  globalAudio.play().catch(err => {
+    console.error("音频播放失败", err);
+  });
 }
 
 // --- 渲染期数 Tabs ---
@@ -429,7 +413,7 @@ function buildPool() {
 
 // --- 渲染卡片内容 (Plan B：统一为上下展开模式) ---
 function renderCard() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel(); 
+  globalAudio.pause();
   
   // 更新统计数据
   const knownCount = pool.filter(x => state.known.includes(x.id)).length;
@@ -439,7 +423,7 @@ function renderCard() {
     $('counter').textContent = `0 / 0`;
     $('sentence-view').style.display = 'flex';
     $('sentence-back-wrapper').style.display = 'none';
-    $('sentence-hint').style.display = 'none'; // 空白提示隐藏
+    $('sentence-hint').style.display = 'none'; 
     $('sentence-tag').textContent = "提示";
     $('sentence-front').textContent = "未找到符合条件的卡片";
     $('sentence-back').textContent = "";
@@ -452,7 +436,7 @@ function renderCard() {
 
   // 无论术语还是句子，全部使用“上下展开”视图
   $('sentence-view').style.display = 'flex';
-  $('sentence-back-wrapper').style.display = 'none'; // 默认折叠参考译文
+  $('sentence-back-wrapper').style.display = 'none'; 
   $('sentence-hint').style.display = 'block';
 
   $('sentence-tag').textContent = card.tag;
@@ -481,7 +465,7 @@ $('sentence-view').onclick = () => {
 $('play-sentence-back').onclick = (e) => {
   e.preventDefault();
   e.stopPropagation();
-  if (pool.length) speakEnglish(pool[currentIdx].back);
+  if (pool.length) playCardAudio(pool[currentIdx].id);
 };
 
 $('btn-prev').onclick = () => {
@@ -542,7 +526,6 @@ document.onkeydown = (e) => {
   else if (e.key === " ") {
     e.preventDefault();
     if (pool.length) {
-      // 统一触发上下展开的点击事件
       $('sentence-view').click();
     }
   }
