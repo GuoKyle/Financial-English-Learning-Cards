@@ -156,19 +156,30 @@ main {
 
 /* 音频按钮 */
 .play-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--accent-light);
+  border: 0;
+  font-size: 20px;
   cursor: pointer;
-  padding: 4px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  padding: 0;
   color: var(--accent-blue);
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s;
+  transition: transform 0.1s, opacity 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
-.play-btn:active { transform: scale(0.9); }
+.play-btn:active { transform: scale(0.92); }
+.play-btn.playing { opacity: 0.65; }
+.play-btn:disabled { opacity: 0.45; cursor: default; }
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
 
 /* --- Sentence Card (Expand) --- */
@@ -300,7 +311,7 @@ main {
         <div class="sentence-divider"></div>
         <div class="header-row" style="margin-bottom: 12px;">
           <div style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">REFERENCE</div>
-          <button class="play-btn" id="play-sentence-back" title="朗读英文">🔊</button>
+          <button class="play-btn" id="play-sentence-back" type="button" title="朗读英文" aria-label="朗读英文">🔊</button>
         </div>
         <div class="sentence-back-text" id="sentence-back"></div>
         <div class="note-box" id="sentence-note"></div>
@@ -334,39 +345,108 @@ let currentIdx = 0;
 let currentIssue = "01";
 let state = JSON.parse(localStorage.getItem("bilingual-minimal-state") || '{"known":[],"wrong":[]}');
 
-// --- 强制清洗旧数据：如果已经在“重练”里，就从“已掌握”剔除 ---
-state.known = state.known.filter(id => !state.wrong.includes(id));
+// --- 英文语音朗读（针对微信 / iOS / Android 手机端优化） ---
+let currentAudio = null;
+let currentPlayButton = null;
 
-const $ = id => document.getElementById(id);
-
-// --- 本地进度存储 ---
-function saveState() {
-  localStorage.setItem("bilingual-minimal-state", JSON.stringify(state));
+function setPlayButtonState(button, playing) {
+  if (!button) return;
+  button.classList.toggle('playing', playing);
+  button.setAttribute('aria-label', playing ? '正在朗读' : '朗读英文');
 }
 
-// --- 纯英文语音朗读 (兼容微信版) ---
-function speakEnglish(text) {
-  // 1. 使用有道词典的免费发音接口（type=2 为美音，type=1 为英音）
+function stopCurrentAudio() {
+  if (currentAudio) {
+    try {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    } catch (_) {}
+  }
+  setPlayButtonState(currentPlayButton, false);
+  currentAudio = null;
+  currentPlayButton = null;
+}
+
+function fallbackSpeak(text) {
+  if (!('speechSynthesis' in window)) {
+    alert('当前微信环境暂不支持语音播放，请尝试使用系统浏览器打开。');
+    return;
+  }
+
+  try {
+    window.speechSynthesis.cancel();
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'en-US';
+    msg.rate = 0.9;
+    msg.pitch = 1;
+    msg.volume = 1;
+    window.speechSynthesis.speak(msg);
+  } catch (err) {
+    console.warn('系统语音播放失败：', err);
+    alert('语音播放失败，请检查网络连接后重试。');
+  }
+}
+
+function speakEnglish(text, button = null) {
+  if (!text) return;
+
+  // 连续点击或切换卡片时，先停止上一段声音，避免重叠播放。
+  stopCurrentAudio();
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.cancel(); } catch (_) {}
+  }
+
+  // 有道发音接口：type=2 为美音。
   const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=2`;
-  const audio = new Audio(url);
-  
-  // 2. 尝试播放
-  audio.play().catch(err => {
-    console.warn("在线语音播放失败，尝试使用系统自带语音...", err);
-    
-    // 3. 降级方案：如果在线接口失效（比如没网），退回使用系统自带 TTS
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel(); 
-      const msg = new SpeechSynthesisUtterance(text);
-      msg.lang = 'en-US'; 
-      msg.rate = 0.9;     
-      window.speechSynthesis.speak(msg);
-    } else {
-      alert("当前微信环境不支持发音，请点击右上角“在浏览器打开”进行学习。");
+  const audio = new Audio();
+  audio.preload = 'auto';
+  audio.src = url;
+  audio.setAttribute('playsinline', '');
+  audio.setAttribute('webkit-playsinline', '');
+
+  currentAudio = audio;
+  currentPlayButton = button;
+  setPlayButtonState(button, true);
+
+  audio.onended = () => {
+    if (currentAudio === audio) {
+      setPlayButtonState(currentPlayButton, false);
+      currentAudio = null;
+      currentPlayButton = null;
     }
-  });
+  };
+
+  audio.onerror = () => {
+    if (currentAudio === audio) {
+      setPlayButtonState(button, false);
+      currentAudio = null;
+      currentPlayButton = null;
+    }
+    fallbackSpeak(text);
+  };
+
+  // 明确走 HTML5 Audio 播放链路，适配微信内置浏览器。
+  try { audio.load(); } catch (_) {}
+
+  const playPromise = audio.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(err => {
+      console.warn('HTML5 Audio 播放失败：', err);
+      if (currentAudio === audio) {
+        setPlayButtonState(button, false);
+        currentAudio = null;
+        currentPlayButton = null;
+      }
+      // 这是用户主动点击喇叭后的降级方案。
+      fallbackSpeak(text);
+    });
+  }
 }
 
+// 页面进入后台时停止当前发音，避免微信切页后继续播放。
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopCurrentAudio();
+});
 // --- 渲染期数 Tabs ---
 function renderTabs() {
   const issues = [...new Set(allData.map(x => x.issue))].sort();
@@ -462,7 +542,7 @@ $('sentence-view').onclick = () => {
 
 $('play-sentence-back').onclick = (e) => {
   e.stopPropagation();
-  if (pool.length) speakEnglish(pool[currentIdx].back);
+  if (pool.length) speakEnglish(pool[currentIdx].back, e.currentTarget);
 };
 
 $('btn-prev').onclick = () => {
