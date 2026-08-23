@@ -115,5 +115,121 @@
     "front": "……解决信息不对称问题，并针对企业发展中需要协调解决的困难，依法依规量身定制解决方案。",
     "back": "The goal is to bridge information gaps and provide, within the framework of laws and regulations, tailored solutions to help businesses facilitate coordination and resolve difficulties in their development.",
     "note": "【口语化交传】Second, we provide tailored, legally sound solutions to help businesses overcome specific operational challenges."
+  }{
+    "id": 14,
+    "issue": "02",
+    "type": "term",
+    "tag": "服贸会 · 展会术语",
+    "front": "中国国际服务贸易交易会（服贸会）",
+    "back": "China International Fair for Trade in Services (CIFTIS)",
+    "note": "CIFTIS直接读/siftis/，不用一个个字母念出来。具体到组织缩写怎么读，可以查英文新闻，看看是一个个字母念出来，还是可以像英文单词一样直接读出来。"
+  },
+  {
+    "id": 15,
+    "issue": "02",
+    "type": "term",
+    "tag": "服贸会 · 展会术语",
+    "front": "主宾国",
+    "back": "Guest of Honor (country)",
+    "note": "本届服贸会的主宾国为挪威 Norway，主宾省为广西壮族自治区（Guest Province of Honor，Guangxi Zhuang Autonomous Region）"
+  },
+  {
+    "id": 16,
+    "issue": "02",
+    "type": "term",
+    "tag": "服贸会 · 展会术语",
+    "front": "商务洽谈 / 洽谈推介",
+    "back": "business matchmaking",
+    "note": "商务洽谈/洽谈推介"
+  },
+  {
+    "id": 17,
+    "issue": "02",
+    "type": "term",
+    "tag": "服贸会 · 展会术语",
+    "front": "搭建深化跨境合作平台",
+    "back": "launchpad for cross-border cooperation",
+    "note": "此处强调“搭台赋能”。launchpad 本意为发射台/起跳点，此处脱壳意译为搭建合作平台、广阔舞台。"
+  },
+  {
+    "id": 18,
+    "issue": "02",
+    "type": "term",
+    "tag": "服贸会 · 展会术语",
+    "front": "智焕新生 金融聚力",
+    "back": "Smart Innovation, Financial Synergy",
+    "note": "2026 年服贸会金融服务专题主题口号。我在思考可不可翻译成这个：Driven by Intelligence, Empowered by Finance。怎么理解这个中文口号呢？有没有更好的建议？"
+  },
+  {
+    "id": 19,
+    "issue": "02",
+    "type": "term",
+    "tag": "服贸会 · 展会术语",
+    "front": "世界五百强及行业龙头企业",
+    "back": "Fortune Global 500 brands and industry leaders",
+    "note": "如果上下文无歧义，用 Fortune 500 也可以表达五百强的意思，蔡行长的发言翻译就采用了这一译法。"
+  },
+  {
+    "id": 20,
+    "issue": "02",
+    "type": "sentence",
+    "tag": "服贸会 · 典范金句",
+    "front": "本届金融专题将打造会议论坛、配套活动、洽谈推介三大主题活动。",
+    "back": "The program will include forums, side events and business matchmaking.",
+    "note": "此处并未字对字翻译出所有内容，而是翻译了主要的信息和内容，简洁明了。"
+  },
+  {
+    "id": 21,
+    "issue": "02",
+    "type": "sentence",
+    "tag": "服贸会 · 典范金句",
+    "front": "本届金融专题……构筑“全球金融创新产品和服务展示、重要政策和行业规则发布、合作伙伴洽谈、前沿金融体验”四大平台。",
+    "back": "The program will include four platforms for showcasing offerings, sharing key policies, connecting partners and demonstrating the latest financial technology.",
+    "note": "🎯【亮点选词·offerings】“产品和服务”不仅可以写 products and services，更推荐简洁地道的 offerings，一词兼指“产品与服务两部分组合”。\n📌【补充要点】重要政策和行业规则亦可作 key policies and industry regulations；此处基于上下文省略了 financial。"
+  },
+  {
+    "id": 22,
+    "issue": "02",
+    "type": "sentence",
+    "tag": "服贸会 · 典范金句",
+    "front": "2026年服贸会首次搭建出海服务推介路演区，邀请金融、法律、会计、知识产权、广告、人力资源等企业和专业机构进行推介。",
+    "back": "The 2026 CIFTIS set up a promotion and roadshow zone for overseas-expansion services for the first time, bringing together providers in finance, law, accounting, intellectual property, advertising and human resources.",
+    "note": "此处来自6月人民网的报道。句尾采用 bringing together providers in... 伴随状语，自然融贯“邀请多领域专业机构推介”，表达地道流畅。"
+  },
+  {
+    "id": 23,
+    "issue": "02",
+    "type": "sentence",
+    "tag": "服贸会 · 译写思维 1/4",
+    "front": "政府搭台、企业唱戏，服贸会……（地道习语版）",
+    "back": "The government sets the stage, and businesses run the show.",
+    "note": "此处关注怎么翻译搭台和唱戏。此处仍然比较容易理解，可以直接翻译出来 stage 和 show。run the show 是地道习语，指企业唱主角。"
+  },
+  {
+    "id": 24,
+    "issue": "02",
+    "type": "sentence",
+    "tag": "服贸会 · 译写思维 2/4",
+    "front": "政府搭台、企业唱戏，服贸会……（舞台主角版）",
+    "back": "The government builds the platform, and businesses take center stage.",
+    "note": "此处关注怎么翻译搭台和唱戏。可以直接翻译出来 stage 和 platform。take center stage（站上舞台中央/成为焦点），常用于国际商业论坛与政商推介，口语中也相对简洁。"
+  },
+  {
+    "id": 25,
+    "issue": "02",
+    "type": "sentence",
+    "tag": "服贸会 · 译写思维 3/4",
+    "front": "政府搭台、企业唱戏，服贸会……（政商公文版）",
+    "back": "CIFTIS is a government-facilitated and business-led platform.",
+    "note": "此处关注怎么翻译搭台和唱戏。可以适当脱壳处理，变成 facilitate（促进）和 lead（带头）。"
+  },
+  {
+    "id": 26,
+    "issue": "02",
+    "type": "sentence",
+    "tag": "服贸会 · 译写思维 4/4",
+    "front": "政府搭台、企业唱戏，服贸会……（复合长句版）",
+    "back": "With the government setting the stage and enterprises playing the leading role, CIFTIS unleashes strong market vitality.",
+    "note": "此处关注怎么翻译搭台和唱戏。采用 With the government setting the stage and enterprises playing the leading role 复合结构作状语，结构紧凑自然。"
   }
 ]
