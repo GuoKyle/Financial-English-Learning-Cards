@@ -131,7 +131,7 @@
     "type": "term",
     "tag": "服贸会 · 展会术语",
     "front": "主宾国",
-    "back": "Guest of Honor (country)",
+    "back": "Guest Country of Honor",
     "note": "本届服贸会的主宾国为挪威 Norway，主宾省为广西壮族自治区（Guest Province of Honor，Guangxi Zhuang Autonomous Region）"
   },
   {
@@ -186,7 +186,7 @@
     "tag": "服贸会 · 典范金句",
     "front": "本届金融专题……构筑“全球金融创新产品和服务展示、重要政策和行业规则发布、合作伙伴洽谈、前沿金融体验”四大平台。",
     "back": "The program will include four platforms for showcasing offerings, sharing key policies, connecting partners and demonstrating the latest financial technology.",
-    "note": "🎯【亮点选词·offerings】“产品和服务”不仅可以写 products and services，更推荐简洁地道的 offerings，一词兼指“产品与服务两部分组合”。\n📌【补充要点】重要政策和行业规则亦可作 key policies and industry regulations；此处基于上下文省略了 financial。"
+    "note": "🎯【亮点选词·offerings】“产品和服务”不仅可以写 products and services，更推荐简洁地道的 offerings，一词兼指“产品与服务两部分组合”。<br><br>📌【补充要点】重要政策和行业规则亦可作 key policies and industry regulations；此处基于上下文省略了 financial。"
   },
   {
     "id": 22,
@@ -202,7 +202,7 @@
     "issue": "02",
     "type": "sentence",
     "tag": "服贸会 · 译写思维 1/4",
-    "front": "政府搭台、企业唱戏，服贸会……（地道习语版）",
+    "front": "政府搭台、企业唱戏，服贸会……",
     "back": "The government sets the stage, and businesses run the show.",
     "note": "此处关注怎么翻译搭台和唱戏。此处仍然比较容易理解，可以直接翻译出来 stage 和 show。run the show 是地道习语，指企业唱主角。"
   },
@@ -211,7 +211,7 @@
     "issue": "02",
     "type": "sentence",
     "tag": "服贸会 · 译写思维 2/4",
-    "front": "政府搭台、企业唱戏，服贸会……（舞台主角版）",
+    "front": "政府搭台、企业唱戏，服贸会……",
     "back": "The government builds the platform, and businesses take center stage.",
     "note": "此处关注怎么翻译搭台和唱戏。可以直接翻译出来 stage 和 platform。take center stage（站上舞台中央/成为焦点），常用于国际商业论坛与政商推介，口语中也相对简洁。"
   },
@@ -220,7 +220,7 @@
     "issue": "02",
     "type": "sentence",
     "tag": "服贸会 · 译写思维 3/4",
-    "front": "政府搭台、企业唱戏，服贸会……（政商公文版）",
+    "front": "政府搭台、企业唱戏，服贸会……",
     "back": "CIFTIS is a government-facilitated and business-led platform.",
     "note": "此处关注怎么翻译搭台和唱戏。可以适当脱壳处理，变成 facilitate（促进）和 lead（带头）。"
   },
@@ -229,7 +229,7 @@
     "issue": "02",
     "type": "sentence",
     "tag": "服贸会 · 译写思维 4/4",
-    "front": "政府搭台、企业唱戏，服贸会……（复合长句版）",
+    "front": "政府搭台、企业唱戏，服贸会……",
     "back": "With the government setting the stage and enterprises playing the leading role, CIFTIS unleashes strong market vitality.",
     "note": "此处关注怎么翻译搭台和唱戏。采用 With the government setting the stage and enterprises playing the leading role 复合结构作状语，结构紧凑自然。"
   }
