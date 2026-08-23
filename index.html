@@ -185,6 +185,33 @@ main {
   position: relative;
 }
 
+/* 加载骨架屏呼吸动画 */
+.skeleton-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 390px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-secondary);
+  gap: 12px;
+}
+.skeleton-bar {
+  background: #eef0f4;
+  border-radius: 8px;
+  height: 16px;
+  animation: skeletonPulse 1.5s infinite ease-in-out;
+}
+@keyframes skeletonPulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.25; }
+  100% { opacity: 0.6; }
+}
+
 .tag-row {
   display: flex;
   justify-content: space-between;
@@ -636,6 +663,14 @@ main {
 <main>
   <div class="card-wrapper" id="card-area">
     
+    <!-- 初始骨架屏加载态 (消除白屏卡死感，数据到达后自动隐藏) -->
+    <div class="skeleton-loader" id="skeleton-view">
+      <div class="skeleton-bar" style="width: 25%;"></div>
+      <div class="skeleton-bar" style="width: 75%; height: 22px; margin: 6px 0;"></div>
+      <div class="skeleton-bar" style="width: 50%;"></div>
+      <div style="font-size: 12px; opacity: 0.6; margin-top: 10px;">正在加载最新语料...</div>
+    </div>
+
     <!-- 翻转卡片视图 -->
     <div class="term-container" id="term-view" style="display: none;">
       <div class="term-inner" id="term-inner">
@@ -1250,16 +1285,41 @@ document.onkeydown = (e) => {
 
 applyModeUI();
 
-fetch("cards.json?t=" + new Date().getTime())
-  .then(res => res.json())
-  .then(data => {
-    allData = data;
-    buildPool();
-  })
-  .catch(err => {
-    $('sentence-front').textContent = "加载语料失败，请确认 cards.json 文件存在。";
-    $('sentence-view').style.display = 'flex';
-  });
+// 优雅骨架加载态 + 3.5秒超时与静默自动重试 (绝不展示旧数据，杜绝内容跳闪)
+function loadCardsData(retryCount = 0) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+  fetch("cards.json?t=" + new Date().getTime(), { signal: controller.signal })
+    .then(res => {
+      if (!res.ok) throw new Error("Fetch failed");
+      return res.json();
+    })
+    .then(data => {
+      clearTimeout(timeoutId);
+      allData = data;
+      // 数据到达，立即隐藏骨架屏，渲染本周最新卡片
+      $('skeleton-view').style.display = 'none';
+      buildPool();
+    })
+    .catch(err => {
+      clearTimeout(timeoutId);
+      // 遇弱网丢包，后台静默重试 1 次
+      if (retryCount < 1) {
+        console.warn("首次拉取超时，正在自动重试...");
+        loadCardsData(retryCount + 1);
+      } else {
+        // 重试后仍失败展示友好重试引导
+        $('skeleton-view').innerHTML = `
+          <div style="font-size:14px; font-weight:600; color:var(--text-main); margin-bottom:4px;">网络连接稍慢</div>
+          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:16px;">未能即时拉取到本周最新语料</div>
+          <button class="btn" onclick="location.reload()" style="font-size:13px; padding:7px 18px; color:var(--accent-blue); border-color:var(--accent-blue);">🔄 重新连接</button>
+        `;
+      }
+    });
+}
+
+loadCardsData();
 </script>
 </body>
 </html>
