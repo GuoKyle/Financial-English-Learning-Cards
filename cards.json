@@ -232,5 +232,149 @@
     "front": "政府搭台、企业唱戏，服贸会……",
     "back": "With the government setting the stage and enterprises playing the leading role, CIFTIS unleashes strong market vitality.",
     "note": "此处关注怎么翻译搭台和唱戏。采用 With the government setting the stage and enterprises playing the leading role 复合结构作状语，结构紧凑自然。"
+  },
+  {
+    "id": 27,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 机构名称",
+    "front": "中共北京市委金融委员会办公室",
+    "back": "Financial Commission of the CPC Beijing Municipal Committee",
+    "note": "此处翻译仍有疑惑，正在询问人事处是否需要带 Office of the...，否则对应的是委员会本级而非办事机构。"
+  },
+  {
+    "id": 28,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 机构名称",
+    "front": "中共北京市委金融工作委员会",
+    "back": "Financial Work Commission of the CPC Beijing Municipal Committee",
+    "note": "市委派出机关，规范译为 Financial Work Commission。北京市委是从the CPC Beijing Municipal Committee，和上文的办公室是一样的。"
+  },
+  {
+    "id": 29,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 机构名称",
+    "front": "北京市地方金融管理局",
+    "back": "Beijing Municipal Bureau of Local Financial Regulation",
+    "note": "北京市：Beijing Municipal。"
+  },
+  {
+    "id": 30,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 领导职务",
+    "front": "分管日常工作的副主任",
+    "back": "Executive Deputy Director",
+    "note": "主持/分管日常工作的常务副职统称 Executive Deputy。"
+  },
+  {
+    "id": 31,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 领导职务",
+    "front": "局长",
+    "back": "Director-General",
+    "note": "参照市委外办的翻译指南。"
+  },
+  {
+    "id": 32,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 领导职务",
+    "front": "副局长",
+    "back": "Deputy Director-General",
+    "note": "参照市委外办的翻译指南。"
+  },
+  {
+    "id": 33,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 领导职务",
+    "front": "处长",
+    "back": "Division Director",
+    "note": "内设处正职。"
+  },
+  {
+    "id": 34,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 领导职务",
+    "front": "副处长",
+    "back": "Deputy Division Director",
+    "note": "内设处副职通用译名。"
+  },
+  {
+    "id": 35,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 领导职务",
+    "front": "科员",
+    "back": "Staff Member",
+    "note": "机关基层通用非领导职务/工作人员。"
+  },
+  {
+    "id": 36,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 公务员职级",
+    "front": "一级巡视员",
+    "back": "Level I Bureau Rank Official",
+    "note": "参照市委外办的翻译指南。"
+  },
+  {
+    "id": 37,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 公务员职级",
+    "front": "二级巡视员",
+    "back": "Level II Bureau Rank Official",
+    "note": "参照市委外办的翻译指南。换个数字，后面巡视员的翻译不变。"
+  },
+  {
+    "id": 38,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 公务员职级",
+    "front": "一级调研员",
+    "back": "Level I Division Rank Official",
+    "note": "参照市委外办的翻译指南。"
+  },
+  {
+    "id": 39,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 公务员职级",
+    "front": "四级调研员",
+    "back": "Level IV Division Rank Official",
+    "note": "参照市委外办的翻译指南。换个数字，后面调研员的翻译不变。"
+  },
+  {
+    "id": 40,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 公务员职级",
+    "front": "一级主任科员",
+    "back": "Level I Principal Staff Member",
+    "note": "参照市委外办的翻译指南。"
+  },
+  {
+    "id": 41,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 公务员职级",
+    "front": "三级主任科员",
+    "back": "Level III Principal Staff Member",
+    "note": "参照市委外办的翻译指南。换个数字，后面主任科员的翻译不变。"
+  },
+  {
+    "id": 42,
+    "issue": "03",
+    "type": "term",
+    "tag": "政务涉外 · 公务员职级",
+    "front": "四级主任科员",
+    "back": "Level IV Principal Staff Member",
+    "note": "参照市委外办的翻译指南。换个数字，后面主任科员的翻译不变。"
   }
 ]
