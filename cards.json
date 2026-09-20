@@ -376,5 +376,95 @@
     "front": "四级主任科员",
     "back": "Level IV Principal Staff Member",
     "note": "参照市委外办的翻译指南。换个数字，后面主任科员的翻译不变。"
+  },
+  {
+    "id": 43,
+    "issue": "04",
+    "type": "term",
+    "tag": "金融街论坛 · 核心词汇",
+    "front": "金融街论坛年会",
+    "back": "Annual Conference of Financial Street Forum",
+    "note": "官方活动标准英译。专有名词通常需要首字母大写。"
+  },
+  {
+    "id": 44,
+    "issue": "04",
+    "type": "term",
+    "tag": "经济金融 · 核心术语",
+    "front": "外商直接投资",
+    "back": "foreign direct investment",
+    "note": "政经文本中极高频词汇，常直接缩写并交传为 FDI。"
+  },
+  {
+    "id": 45,
+    "issue": "04",
+    "type": "term",
+    "tag": "经济金融 · 核心术语",
+    "front": "跨境人民币收付",
+    "back": "cross-border RMB receipts and payments",
+    "note": "金融专业表述中，“收付”常用 receipts and payments，比普通的 income and expense 更为严谨精准。"
+  },
+  {
+    "id": 46,
+    "issue": "04",
+    "type": "term",
+    "tag": "北京发展 · 核心政策",
+    "front": "四平台",
+    "back": "Four Platforms",
+    "note": "常与“两区”（Two Zones）并提，指北京市致力于打造的四个重要国际化交流合作平台。"
+  },
+  {
+    "id": 47,
+    "issue": "04",
+    "type": "term",
+    "tag": "四平台 · 核心名称",
+    "front": "中国国际服务贸易交易会（服贸会）",
+    "back": "China International Fair for Trade in Services (CIFTIS)",
+    "note": "“四平台”之一。缩写 CIFTIS 读音通常直接作为单词发音，是高频展会缩写。"
+  },
+  {
+    "id": 48,
+    "issue": "04",
+    "type": "term",
+    "tag": "四平台 · 核心名称",
+    "front": "中关村论坛",
+    "back": "Zhongguancun (ZGC) Forum",
+    "note": "“四平台”之一。ZGC 是中关村的官方首字母简写，涉外宣传和路演中极为常见。"
+  },
+  {
+    "id": 49,
+    "issue": "04",
+    "type": "term",
+    "tag": "四平台 · 核心名称",
+    "front": "金融街论坛",
+    "back": "Financial Street Forum",
+    "note": "“四平台”之一，聚焦国际金融合作与改革。"
+  },
+  {
+    "id": 50,
+    "issue": "04",
+    "type": "term",
+    "tag": "四平台 · 核心名称",
+    "front": "北京文化论坛",
+    "back": "Beijing Culture Forum",
+    "note": "“四平台”之一，聚焦文化交流与文明互鉴。"
+  },
+  {
+    "id": 51,
+    "issue": "04",
+    "type": "sentence",
+    "tag": "金融街论坛 · 重点句",
+    "front": "金融街论坛是北京市“两区”“四平台”重要组成部分，是国家开放发展的重要平台，被誉为“中国金融改革发展风向标”。",
+    "back": "As an important platform for the opening up and development of China, the Financial Street Forum is an integral component of Beijing's “Two Zones” and “Four Platforms” development framework, widely recognized as the \"bellwether of China’s financial reform and development\".",
+    "note": "【亮点选词】bellwether (风向标/领头羊)；integral component (重要组成部分)。\n【句法解析】英文采用 As... 的状语前置，将“国家开放发展”置于句首，主句落脚在“金融街论坛”及其定语上，逻辑紧凑。"
+  },
+  {
+    "id": 52,
+    "issue": "04",
+    "type": "sentence",
+    "tag": "金融街论坛 · 重点句",
+    "front": "多年来，在年会基础上，金融街论坛全年举办分论坛和沙龙活动，形成了“一主+N分+多沙龙”的框架体系。",
+    "back": "Over the years, centered on its annual conference, the Financial Street Forum has hosted sub-forums and salons throughout the year, establishing a \"1+N+X\" framework featuring one main forum, N sub-forums, and multiple salons.",
+    "note": "【翻译技巧】中文“一主+N分+多沙龙”这类特色数字缩略语，在主办方允许的情况下可以适当换个表述，概括为 \"1+N+X\" framework。\n【结构拆解】centered on... 处理“在…基础上”；句尾使用 establishing 伴随状语和 featuring... 介词短语，层层递进地交代框架细节。"
   }
 ]
