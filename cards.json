@@ -466,5 +466,149 @@
     "front": "多年来，在年会基础上，金融街论坛全年举办分论坛和沙龙活动，形成了“一主+N分+多沙龙”的框架体系。",
     "back": "Over the years, centered on its annual conference, the Financial Street Forum has hosted sub-forums and salons throughout the year, establishing a \"1+N+X\" framework featuring one main forum, N sub-forums, and multiple salons.",
     "note": "【翻译技巧】中文“一主+N分+多沙龙”这类特色数字缩略语，在主办方允许的情况下可以适当换个表述，概括为 \"1+N+X\" framework。\n【结构拆解】centered on... 处理“在…基础上”；句尾使用 establishing 伴随状语和 featuring... 介词短语，层层递进地交代框架细节。"
+  },
+  {
+    "id": 53,
+    "issue": "05",
+    "type": "term",
+    "tag": "政务机构 · 核心名称",
+    "front": "北京市人民政府",
+    "back": "The People's Government of Beijing Municipality",
+    "note": "官方标准英译。Municipality 不省略。"
+  },
+  {
+    "id": 54,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融监管 · 核心机构",
+    "front": "中国人民银行",
+    "back": "People's Bank of China (PBC)",
+    "note": "中国的央行。官方标识的正式缩写为 PBC，不过在外媒报道和投行路演材料中也极常听到 PBOC，口译时两者皆可，可以先说全程再说简称。"
+  },
+  {
+    "id": 55,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融监管 · 核心机构",
+    "front": "国家金融监督管理总局",
+    "back": "National Financial Regulatory Administration (NFRA)",
+    "note": "【易错提示】此处使用的是 Regulatory（监管的），而不是 Regulation。这是该机构2023年成立后的官方标准译名。"
+  },
+  {
+    "id": 56,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融监管 · 核心机构",
+    "front": "中国证券监督管理委员会（证监会）",
+    "back": "China Securities Regulatory Commission (CSRC)",
+    "note": "【易错提示】证券必须使用复数 Securities；国家级的高规格委员会使用 Commission。"
+  },
+  {
+    "id": 57,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融监管 · 核心机构",
+    "front": "国家外汇管理局（外汇局）",
+    "back": "State Administration of Foreign Exchange (SAFE)",
+    "note": "业界通常直接像单词一样拼读为 /seɪf/。"
+  },
+  {
+    "id": 58,
+    "issue": "05",
+    "type": "term",
+    "tag": "银行体系 · 组织层级",
+    "front": "总行",
+    "back": "Head Office",
+    "note": "也常表述为 Headquarters，视具体金融机构的内部英文规范而定。"
+  },
+  {
+    "id": 59,
+    "issue": "05",
+    "type": "term",
+    "tag": "银行体系 · 组织层级",
+    "front": "分行",
+    "back": "branch",
+    "note": "省级、市级或海外的主要分支机构。"
+  },
+  {
+    "id": 60,
+    "issue": "05",
+    "type": "term",
+    "tag": "银行体系 · 组织层级",
+    "front": "支行",
+    "back": "sub-branch",
+    "note": "隶属于分行，通常为区级或具体街道网点。"
+  },
+  {
+    "id": 61,
+    "issue": "05",
+    "type": "term",
+    "tag": "银行体系 · 组织层级",
+    "front": "子行",
+    "back": "subsidiary bank",
+    "note": "具有独立法人资格，常简称为 subsidiary。"
+  },
+  {
+    "id": 62,
+    "issue": "05",
+    "type": "term",
+    "tag": "银行体系 · 组织层级",
+    "front": "代表处",
+    "back": "Representative Office",
+    "note": "不直接经营金融业务的联络机构，常见于外资金融机构在华布局的早期阶段。"
+  },
+  {
+    "id": 63,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融机构 · 北京分支",
+    "front": "人行北分",
+    "back": "People's Bank of China Beijing Municipal Branch",
+    "note": "官方机构全称及 Logo 标准英译需带 Municipal 以体现其省级行政分支级别。"
+  },
+  {
+    "id": 64,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融机构 · 北京分支",
+    "front": "工行北分",
+    "back": "Industrial and Commercial Bank of China (ICBC) Beijing Branch",
+    "note": "各大商业银行北京分行在涉外交传与幻灯片呈现中，多用缩写+北京分行的组合方式。"
+  },
+  {
+    "id": 65,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融机构 · 北京分支",
+    "front": "农行北分",
+    "back": "Agricultural Bank of China (ABC) Beijing Branch",
+    "note": "农行缩写为 ABC。"
+  },
+  {
+    "id": 66,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融机构 · 北京分支",
+    "front": "中行北分",
+    "back": "Bank of China (BOC) Beijing Branch",
+    "note": "【防坑预警】中国银行的缩写是 BOC。"
+  },
+  {
+    "id": 67,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融机构 · 北京分支",
+    "front": "建行北分",
+    "back": "China Construction Bank (CCB) Beijing Branch",
+    "note": "建行缩写为 CCB。"
+  },
+  {
+    "id": 68,
+    "issue": "05",
+    "type": "term",
+    "tag": "金融机构 · 北京分支",
+    "front": "交行北分",
+    "back": "Bank of Communications (BOCOM) Beijing Branch",
+    "note": "注意交通银行的缩写为 BOCOM，可以一个个字母念出来，也可以说/bəʊkɒm/。"
   }
 ]
